@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mortgage_calculator/calculator_form_screen.dart';
 import 'package:mortgage_calculator/common/constants/constants.dart';
 import 'package:mortgage_calculator/common/constants/icons_constant.dart';
 import 'package:mortgage_calculator/common/constants/my_style.dart';
@@ -67,7 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Button(
                                   buttonHeight: 40,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => CalculatorFormScreen()));
+                                  },
                                   text: "Calculate",
                                   fontSize: MyStyle.fourteen,
                                 ),

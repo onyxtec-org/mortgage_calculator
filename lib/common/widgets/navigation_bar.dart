@@ -3,8 +3,16 @@ import 'package:flutter_svg/svg.dart';
 import '../constants/my_style.dart';
 
 class NavBar extends StatelessWidget {
-  NavBar({Key? key, this.backIcon, this.onBackTap, this.titleText, this.icons, this.onIconTap, this.titleColor = MyStyle.primaryColor})
-      : super(key: key);
+  NavBar({
+    Key? key,
+    this.backIcon,
+    this.onBackTap,
+    this.titleText,
+    this.icons,
+    this.onIconTap,
+    this.titleColor = MyStyle.primaryColor,
+    this.iconsColor = MyStyle.primaryColor,
+  }) : super(key: key);
 
   final String? backIcon;
   final String? titleText;
@@ -12,6 +20,7 @@ class NavBar extends StatelessWidget {
   final Function(int)? onIconTap;
   final VoidCallback? onBackTap;
   final Color titleColor;
+  final Color iconsColor;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +36,7 @@ class NavBar extends StatelessWidget {
                   backIcon!,
                   height: 24,
                   width: 24,
-                  color: MyStyle.primaryColor,
+                  color: iconsColor,
                 ),
                 onPressed: () {
                   Navigator.pop(context);
