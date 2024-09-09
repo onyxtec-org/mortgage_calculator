@@ -52,7 +52,7 @@ class TextInputFieldWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: SvgPicture.asset(
                     prefixIcon!,
-                    color: MyStyle.greyColor,
+                    color: MyStyle.grayColor,
                   ),
                 )
               : null,

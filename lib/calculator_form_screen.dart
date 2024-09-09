@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mortgage_calculator/common/constants/constants.dart';
 import 'package:mortgage_calculator/common/constants/icons_constant.dart';
 import 'package:mortgage_calculator/common/constants/my_style.dart';
 import 'package:mortgage_calculator/common/widgets/elevated_button.dart';
 import 'package:mortgage_calculator/common/widgets/navigation_bar.dart';
 import 'package:mortgage_calculator/common/widgets/normal_text_view.dart';
 import 'package:mortgage_calculator/common/widgets/text_input_field_widget.dart';
+import 'package:mortgage_calculator/models/loan_model.dart';
+import 'package:mortgage_calculator/result_screen.dart';
+
+import 'common/constants/constants.dart';
 
 class CalculatorFormScreen extends StatefulWidget {
   const CalculatorFormScreen({super.key});
@@ -33,6 +36,8 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
   final TextEditingController _pmiTextFieldController = TextEditingController();
   final TextEditingController _homeOwnerInsTextFieldController = TextEditingController();
   final TextEditingController _hoaFeesTextFieldController = TextEditingController();
+
+  LoanModel? model;
 
   @override
   Widget build(BuildContext context) {
@@ -181,51 +186,51 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                           children: [
                             Expanded(
                                 child: Column(
-                              children: [
-                                const NormalTextView(
-                                  text: Constants.propertyTax,
-                                  color: MyStyle.primaryColor,
-                                  fontSize: MyStyle.fourteen,
-                                ),
-                                const SizedBox(height: MyStyle.four),
-                                TextInputFieldWidget(
-                                  controller: _propertyTaxTextFieldController,
-                                  inputType: TextInputType.number,
-                                  inputAction: TextInputAction.next,
-                                  errorText: _propertyTaxError,
-                                  suffixText: '\$',
-                                  onChanged: (value) {
-                                    setState(() {
-                                      // _nameError = value.isEmpty ? 'Add Amount' : null;
-                                    });
-                                  },
-                                ),
-                              ],
-                            )),
+                                  children: [
+                                    const NormalTextView(
+                                      text: Constants.propertyTax,
+                                      color: MyStyle.primaryColor,
+                                      fontSize: MyStyle.fourteen,
+                                    ),
+                                    const SizedBox(height: MyStyle.four),
+                                    TextInputFieldWidget(
+                                      controller: _propertyTaxTextFieldController,
+                                      inputType: TextInputType.number,
+                                      inputAction: TextInputAction.next,
+                                      errorText: _propertyTaxError,
+                                      suffixText: '\$',
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // _nameError = value.isEmpty ? 'Add Amount' : null;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                )),
                             const SizedBox(width: MyStyle.ten),
                             Expanded(
                                 child: Column(
-                              children: [
-                                const NormalTextView(
-                                  text: Constants.pmi,
-                                  color: MyStyle.primaryColor,
-                                  fontSize: MyStyle.fourteen,
-                                ),
-                                const SizedBox(height: MyStyle.four),
-                                TextInputFieldWidget(
-                                  controller: _pmiTextFieldController,
-                                  inputType: TextInputType.number,
-                                  inputAction: TextInputAction.next,
-                                  errorText: _pmiError,
-                                  suffixText: '\$',
-                                  onChanged: (value) {
-                                    setState(() {
-                                      // _nameError = value.isEmpty ? 'Add Amount' : null;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ))
+                                  children: [
+                                    const NormalTextView(
+                                      text: Constants.pmi,
+                                      color: MyStyle.primaryColor,
+                                      fontSize: MyStyle.fourteen,
+                                    ),
+                                    const SizedBox(height: MyStyle.four),
+                                    TextInputFieldWidget(
+                                      controller: _pmiTextFieldController,
+                                      inputType: TextInputType.number,
+                                      inputAction: TextInputAction.next,
+                                      errorText: _pmiError,
+                                      suffixText: '\$',
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // _nameError = value.isEmpty ? 'Add Amount' : null;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ))
                           ],
                         ),
 
@@ -234,58 +239,82 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                           children: [
                             Expanded(
                                 child: Column(
-                              children: [
-                                const NormalTextView(
-                                  text: Constants.homeOwnerInsurance,
-                                  color: MyStyle.primaryColor,
-                                  fontSize: MyStyle.fourteen,
-                                ),
-                                const SizedBox(height: MyStyle.four),
-                                TextInputFieldWidget(
-                                  controller: _homeOwnerInsTextFieldController,
-                                  inputType: TextInputType.number,
-                                  inputAction: TextInputAction.next,
-                                  errorText: _homeOwnerInsuranceError,
-                                  suffixText: '\$',
-                                  onChanged: (value) {
-                                    setState(() {
-                                      // _nameError = value.isEmpty ? 'Add Amount' : null;
-                                    });
-                                  },
-                                ),
-                              ],
-                            )),
+                                  children: [
+                                    const NormalTextView(
+                                      text: Constants.homeOwnerInsurance,
+                                      color: MyStyle.primaryColor,
+                                      fontSize: MyStyle.fourteen,
+                                    ),
+                                    const SizedBox(height: MyStyle.four),
+                                    TextInputFieldWidget(
+                                      controller: _homeOwnerInsTextFieldController,
+                                      inputType: TextInputType.number,
+                                      inputAction: TextInputAction.next,
+                                      errorText: _homeOwnerInsuranceError,
+                                      suffixText: '\$',
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // _nameError = value.isEmpty ? 'Add Amount' : null;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                )),
                             const SizedBox(width: MyStyle.ten),
                             Expanded(
                                 child: Column(
-                              children: [
-                                const NormalTextView(
-                                  text: Constants.hoaFees,
-                                  color: MyStyle.primaryColor,
-                                  fontSize: MyStyle.fourteen,
-                                ),
-                                const SizedBox(height: MyStyle.four),
-                                TextInputFieldWidget(
-                                  controller: _hoaFeesTextFieldController,
-                                  inputType: TextInputType.number,
-                                  inputAction: TextInputAction.done,
-                                  errorText: _hoaFeesError,
-                                  suffixText: '\$',
-                                  onChanged: (value) {
-                                    setState(() {
-                                      // _nameError = value.isEmpty ? 'Add Amount' : null;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ))
+                                  children: [
+                                    const NormalTextView(
+                                      text: Constants.hoaFees,
+                                      color: MyStyle.primaryColor,
+                                      fontSize: MyStyle.fourteen,
+                                    ),
+                                    const SizedBox(height: MyStyle.four),
+                                    TextInputFieldWidget(
+                                      controller: _hoaFeesTextFieldController,
+                                      inputType: TextInputType.number,
+                                      inputAction: TextInputAction.done,
+                                      errorText: _hoaFeesError,
+                                      suffixText: '\$',
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // _nameError = value.isEmpty ? 'Add Amount' : null;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ))
                           ],
                         ),
 
                         /* Calculate button */
                         SizedBox(
                           width: double.infinity,
-                          child: Button(onPressed: () {}, text: Constants.calculate),
+                          child: Button(
+                              onPressed: () {
+
+
+                                LoanModel updatedModel = LoanModel(
+                                  id: model?.id,
+                                  howePrice: 2.0,
+                                  // Updated value
+                                  propertyTax: model?.propertyTax ?? 0.0,
+                                  downPayment: model?.downPayment ?? 0.0,
+                                  pmi: model?.pmi ?? 0.0,
+                                  loanTerm: model?.loanTerm ?? 0.0,
+                                  homeOwnerInsurance: model?.homeOwnerInsurance ?? 0.0,
+                                  interestRate: model?.interestRate ?? 0.0,
+                                  hoaFees: model?.hoaFees ?? 0.0,
+                                );
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ResultScreen(
+                                              loanModel: updatedModel,
+                                            )));
+                              },
+                              text: Constants.calculate),
                         ),
                         const SizedBox(height: MyStyle.twenty),
 
@@ -313,3 +342,5 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
     );
   }
 }
+
+
