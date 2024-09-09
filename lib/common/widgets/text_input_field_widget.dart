@@ -56,7 +56,26 @@ class TextInputFieldWidget extends StatelessWidget {
                   ),
                 )
               : null,
-          suffixText: suffixText ?? '',
+          suffixIcon: suffixText != null
+              ? IntrinsicWidth(
+                  // Dynamically adjust width based on text
+                  child: Container(
+                    padding: const EdgeInsets.only(right: 12.0),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        suffixText!,
+                        style: TextStyle(
+                          color: MyStyle.primaryColor,
+                          fontSize: MediaQuery.of(context).size.width < 600 ? MyStyle.fourteen : MyStyle.eighteen,
+                        ),
+                        overflow: TextOverflow.ellipsis, // Ensure text doesn't overflow
+                        maxLines: 1, // Limit to one line
+                      ),
+                    ),
+                  ),
+                )
+              : null,
           fillColor: Colors.white,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
