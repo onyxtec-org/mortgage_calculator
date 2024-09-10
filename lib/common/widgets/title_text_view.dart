@@ -10,15 +10,18 @@ class TitleTextView extends StatelessWidget {
   final TextAlign textAlign;
   final Color fontColor;
   final FontWeight fontWeight;
+  final int maxLines;
 
-  const TitleTextView(
-      {super.key,
-      required this.text,
-      this.alignment = Alignment.centerLeft,
-      this.fontSize = MyStyle.sixteen,
-      this.textAlign = TextAlign.center,
-      this.fontColor = MyStyle.primaryColor,
-      this.fontWeight = FontWeight.normal});
+  const TitleTextView({
+    super.key,
+    required this.text,
+    this.alignment = Alignment.centerLeft,
+    this.fontSize = MyStyle.sixteen,
+    this.textAlign = TextAlign.center,
+    this.fontColor = MyStyle.primaryColor,
+    this.fontWeight = FontWeight.normal,
+    this.maxLines = 1,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,14 @@ class TitleTextView extends StatelessWidget {
       child: Text(
         text,
         textAlign: textAlign,
-        style: TextStyle(fontSize: fontSize, color: fontColor, fontFamily: Constants.fontFamily, fontWeight: fontWeight),
+        maxLines: maxLines,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: fontSize,
+          color: fontColor,
+          fontFamily: Constants.fontFamily,
+          fontWeight: fontWeight,
+        ),
       ),
     );
   }
