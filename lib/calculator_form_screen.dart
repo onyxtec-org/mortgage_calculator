@@ -4,6 +4,7 @@ import 'package:mortgage_calculator/common/constants/my_style.dart';
 import 'package:mortgage_calculator/common/widgets/elevated_button.dart';
 import 'package:mortgage_calculator/common/widgets/navigation_bar.dart';
 import 'package:mortgage_calculator/common/widgets/normal_text_view.dart';
+import 'package:mortgage_calculator/common/widgets/text_input_container.dart';
 import 'package:mortgage_calculator/common/widgets/text_input_field_widget.dart';
 import 'package:mortgage_calculator/managers/mortgage_loan_manager.dart';
 import 'package:mortgage_calculator/models/mortgage_loan_model.dart';
@@ -106,7 +107,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                               if (parsedValue != null && parsedValue > 0) {
                                 homePrice = parsedValue;
                                 _homePriceError = null;
-                                // calculateLoanToValue();
+                                calculateLoanToValue();
                               } else {
                                 _homePriceError = value.isEmpty ? 'Please enter home price' : 'Home price must be positive';
                               }
@@ -163,14 +164,17 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                             ),
                             const SizedBox(width: 10),
                             Expanded(
-                              child: TextInputFieldWidget(
-                                controller: _downPaymentPercentTextFieldController,
-                                inputType: TextInputType.number,
-                                inputAction: TextInputAction.next,
-                                suffixText: '%',
-                                onChanged: (value) {
-                                  // Handle percentage value if needed
-                                },
+                              child: TextInputContainer(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: NormalTextView(
+                                            text: loanToValue == null ? '' : loanToValue!.toStringAsFixed(2),
+                                            color: MyStyle.grayColor,
+                                            fontSize: MyStyle.fourteen)),
+                                    const NormalTextView(text: '%', color: MyStyle.grayColor, fontSize: MyStyle.fourteen),
+                                  ],
+                                ),
                               ),
                             ),
                           ],

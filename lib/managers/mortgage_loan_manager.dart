@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'result.dart';
+
 class MortgageLoanManager {
   // Calculate loan amount by subtracting the down payment from the home price
   static double calculateLoanAmount(double homePrice, double downPayment) {
@@ -55,7 +57,7 @@ class MortgageLoanManager {
   }
 
   // Calculate the total monthly payment including mortgage, taxes, insurance, and fees
-  static double calculateTotalMonthlyPayment({
+  static Result calculateTotalMonthlyPayment({
     required double homePrice,
     required double downPayment,
     required int loanTermYears,
@@ -74,9 +76,18 @@ class MortgageLoanManager {
     double monthlyPMI = calculateMonthlyPMI(loanAmount, pmiRate);
     double anualOwnerHomeInsurance = annualHomeInsurance /* / 12*/;
 
+    // Log values for debugging
+    print('loanAmount: $loanAmount');
+    print('monthlyInterestRate: $monthlyInterestRate');
+    print('numberOfPayments: $numberOfPayments');
+    print('monthlyMortgage: $monthlyMortgage');
+    print('monthlyPropertyTax: $monthlyPropertyTax');
+    print('monthlyPMI: $monthlyPMI');
+    print('anualOwnerHomeInsurance: $anualOwnerHomeInsurance');
     // Calculate the total monthly payment
-    return monthlyMortgage + monthlyPropertyTax + anualOwnerHomeInsurance + hoaFees;
-
-    /// will add this if require monthlyPMI
+    var totalMonthlyPayment =
+        monthlyMortgage + monthlyPropertyTax + anualOwnerHomeInsurance + hoaFees; // will add this if require "monthlyPMI"
+    Result result = Result(principleAndInterest: monthlyMortgage, totalMonthlyPayment: totalMonthlyPayment);
+    return result;
   }
 }

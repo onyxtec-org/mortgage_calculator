@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(MyStyle.twenty),
+                  padding: const EdgeInsets.only(left: MyStyle.twenty, right: MyStyle.twenty, bottom: MyStyle.twenty),
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(MyStyle.twentyFour),
@@ -52,31 +52,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     slivers: [
                       // Static section for Mortgage Calculator
                       SliverToBoxAdapter(
-                        child: BackgroundContainer(
-                          color: MyStyle.whiteColor,
-                          borderRadius: MyStyle.twelve,
-                          isBorder: false,
-                          child: Padding(
-                            padding: const EdgeInsets.all(MyStyle.twelve),
-                            child: Row(
-                              children: [
-                                const SvgIconWidget(iconPath: IconsConstant.icHome),
-                                const SizedBox(width: 20.0),
-                                const Expanded(
-                                  child: TitleTextView(
-                                    text: Constants.mortgage,
-                                    fontWeight: FontWeight.bold,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: MyStyle.twenty),
+                          child: BackgroundContainer(
+                            color: MyStyle.whiteColor,
+                            borderRadius: MyStyle.twelve,
+                            isBorder: false,
+                            child: Padding(
+                              padding: const EdgeInsets.all(MyStyle.twelve),
+                              child: Row(
+                                children: [
+                                  const SvgIconWidget(iconPath: IconsConstant.icHome),
+                                  const SizedBox(width: 20.0),
+                                  const Expanded(
+                                    child: TitleTextView(
+                                      text: Constants.mortgage,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Button(
-                                  buttonHeight: 40,
-                                  onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => CalculatorFormScreen()));
-                                  },
-                                  text: "Calculate",
-                                  fontSize: MyStyle.fourteen,
-                                ),
-                              ],
+                                  Button(
+                                    buttonHeight: 40,
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => CalculatorFormScreen()));
+                                    },
+                                    text: "Calculate",
+                                    fontSize: MyStyle.fourteen,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -199,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               height: MyStyle.fourteen,
                                             ),
                                             TitleTextView(
-                                              text: '5,000\$',
+                                              text: '\$5,000',
                                               fontWeight: FontWeight.bold,
                                             ),
                                             NormalTextView(text: 'Investment Amount', color: MyStyle.grayColor, fontSize: MyStyle.twelve)

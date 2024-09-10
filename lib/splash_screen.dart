@@ -52,12 +52,12 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             // Text at the bottom
-            Align(
+            const Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 40.0),
                 child: Text(
-                  'Excavation  |  Demolition ',
+                  Constants.appName,
                   style: TextStyle(
                     fontSize: MyStyle.fourteen,
                     color: MyStyle.whiteColor,

@@ -157,7 +157,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                               height: MyStyle.fourteen,
                                             ),
                                             TitleTextView(
-                                              text: '5,000\$',
+                                              text: '\$5,000',
                                               fontWeight: FontWeight.bold,
                                             ),
                                             NormalTextView(text: 'Investment Amount', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
