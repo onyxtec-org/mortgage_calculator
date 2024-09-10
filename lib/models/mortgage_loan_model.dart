@@ -1,6 +1,6 @@
-class LoanModel {
+class MortgageLoanModel {
   final int? id;
-  double howePrice;
+  double homePrice;
   double propertyTax;
   double downPayment;
   double pmi;
@@ -9,9 +9,9 @@ class LoanModel {
   double interestRate;
   double hoaFees;
 
-  LoanModel({
+  MortgageLoanModel({
     this.id,
-    required this.howePrice,
+    required this.homePrice,
     required this.propertyTax,
     required this.downPayment,
     required this.pmi,

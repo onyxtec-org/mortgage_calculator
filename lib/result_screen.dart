@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mortgage_calculator/common/widgets/background_container.dart';
 import 'package:mortgage_calculator/common/widgets/normal_text_view.dart';
 import 'package:mortgage_calculator/common/widgets/title_text_view.dart';
-import 'package:mortgage_calculator/managers/loan_manager.dart';
-import 'package:mortgage_calculator/models/loan_model.dart';
+import 'package:mortgage_calculator/managers/mortgage_loan_manager.dart';
+import 'package:mortgage_calculator/models/mortgage_loan_model.dart';
 
 import 'common/constants/constants.dart';
 import 'common/constants/icons_constant.dart';
@@ -12,15 +12,17 @@ import 'common/widgets/elevated_button.dart';
 import 'common/widgets/navigation_bar.dart';
 
 class ResultScreen extends StatefulWidget {
-  LoanModel? loanModel;
+  MortgageLoanModel? mortgageLoanModel;
 
-  ResultScreen({super.key, this.loanModel});
+  ResultScreen({super.key, this.mortgageLoanModel});
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
 }
 
 class _ResultScreenState extends State<ResultScreen> {
+  var totalMonthlyPayment;
+
   @override
   void initState() {
     super.initState();
@@ -28,10 +30,10 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   void calculateResult() {
-    var loanData = widget.loanModel;
+    var loanData = widget.mortgageLoanModel;
     if (loanData != null) {
-      var totalMonthlyPayment = LoanManager.calculateTotalMonthlyPayment(
-          homePrice: loanData.howePrice ,
+      totalMonthlyPayment = MortgageLoanManager.calculateTotalMonthlyPayment(
+          homePrice: loanData.homePrice,
           downPayment: loanData.downPayment,
           loanTermYears: loanData.loanTerm,
           annualInterestRate: loanData.interestRate,
@@ -39,7 +41,6 @@ class _ResultScreenState extends State<ResultScreen> {
           annualHomeInsurance: loanData.homeOwnerInsurance,
           pmiAmount: loanData.pmi,
           hoaFees: loanData.hoaFees);
-      print('Monthly total payment: ${totalMonthlyPayment.toStringAsFixed(2)}');
     }
   }
 
@@ -97,7 +98,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                             const NormalTextView(
                                                 text: Constants.homePrice, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                             TitleTextView(
-                                              text: '${widget.loanModel?.howePrice}\$',
+                                              text: '${widget.mortgageLoanModel?.homePrice}\$',
                                               fontWeight: FontWeight.bold,
                                             )
                                           ],
@@ -108,7 +109,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                             const NormalTextView(
                                                 text: Constants.propertyTax, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                             TitleTextView(
-                                              text: '${widget.loanModel?.propertyTax}\$',
+                                              text: '${widget.mortgageLoanModel?.propertyTax}\$',
                                               fontWeight: FontWeight.bold,
                                             )
                                           ],
@@ -124,7 +125,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                             const NormalTextView(
                                                 text: Constants.downPayment, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                             TitleTextView(
-                                              text: '${widget.loanModel?.downPayment}\$',
+                                              text: '${widget.mortgageLoanModel?.downPayment}\$',
                                               fontWeight: FontWeight.bold,
                                             )
                                           ],
@@ -134,7 +135,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                           children: [
                                             const NormalTextView(text: Constants.pmi, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                             TitleTextView(
-                                              text: '${widget.loanModel?.pmi}\$',
+                                              text: '${widget.mortgageLoanModel?.pmi}\$',
                                               fontWeight: FontWeight.bold,
                                             )
                                           ],
@@ -150,7 +151,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                             const NormalTextView(
                                                 text: Constants.loanTerm, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                             TitleTextView(
-                                              text: '${widget.loanModel?.loanTerm} years',
+                                              text: '${widget.mortgageLoanModel?.loanTerm} years',
                                               fontWeight: FontWeight.bold,
                                             )
                                           ],
@@ -161,7 +162,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                             const NormalTextView(
                                                 text: Constants.homeOwnerInsurance, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                             TitleTextView(
-                                              text: '${widget.loanModel?.homeOwnerInsurance}\$',
+                                              text: '${widget.mortgageLoanModel?.homeOwnerInsurance}\$',
                                               fontWeight: FontWeight.bold,
                                             )
                                           ],
@@ -177,7 +178,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                             const NormalTextView(
                                                 text: Constants.interestRate, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                             TitleTextView(
-                                              text: '${widget.loanModel?.interestRate}%',
+                                              text: '${widget.mortgageLoanModel?.interestRate}%',
                                               fontWeight: FontWeight.bold,
                                             )
                                           ],
@@ -188,7 +189,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                             const NormalTextView(
                                                 text: Constants.hoaFees, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                             TitleTextView(
-                                              text: '${widget.loanModel?.hoaFees}\$',
+                                              text: '${widget.mortgageLoanModel?.hoaFees}\$',
                                               fontWeight: FontWeight.bold,
                                             )
                                           ],
@@ -199,7 +200,24 @@ class _ResultScreenState extends State<ResultScreen> {
                                 ),
                               ),
                             ),
-                            TitleTextView(text: 'Total monthly payment'),
+                            if (totalMonthlyPayment != null)
+                            Text.rich(
+                              textAlign: TextAlign.center,
+                              TextSpan(
+                                text: 'Total Monthly payment\n',
+                                style: TextStyle(color: MyStyle.primaryColor, fontSize: MyStyle.fourteen, fontFamily: Constants.fontFamily),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: '\$${totalMonthlyPayment.toStringAsFixed(2)}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: MyStyle.sixteen,
+                                      fontFamily: Constants.fontFamily,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             const SizedBox(height: MyStyle.twenty),
                           ],
                         ),

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-class LoanManager {
+class MortgageLoanManager {
   // Calculate loan amount by subtracting the down payment from the home price
   static double calculateLoanAmount(double homePrice, double downPayment) {
     return homePrice - downPayment;
@@ -38,9 +38,20 @@ class LoanManager {
     return (pmiAmount / loanAmount) * 100;
   }
 
-  // Calculate the Loan-to-Value ratio, used for PMI and other calculations
-  static double calculateLTV(double homePrice, double loanAmount) {
+  // Calculate the Loan-to-Value (LTV) ratio
+  static double calculateLTV(double homePrice, double downPayment) {
+    double loanAmount = calculateLoanAmount(homePrice, downPayment);
     return (loanAmount / homePrice) * 100;
+  }
+
+  // Calculate Down Payment as a percentage of the home price
+  static double calculateDownPaymentPercentage(double homePrice, double downPayment) {
+    // Check if down payment is greater than home price
+    if (downPayment > homePrice) {
+      // Optionally, you can handle this case differently, like returning a specific value or throwing an error
+      return double.nan; // or return a value that indicates invalid input
+    }
+    return (downPayment / homePrice) * 100;
   }
 
   // Calculate the total monthly payment including mortgage, taxes, insurance, and fees
@@ -61,18 +72,11 @@ class LoanManager {
     double monthlyPropertyTax = calculateMonthlyPropertyTax(annualPropertyTax);
     double pmiRate = convertPMIAmountToPercentage(pmiAmount, loanAmount); // Convert PMI amount to percentage
     double monthlyPMI = calculateMonthlyPMI(loanAmount, pmiRate);
-    double monthlyHomeInsurance = annualHomeInsurance / 12;
-
-    // Log values for debugging
-    print('loanAmount: $loanAmount');
-    print('monthlyInterestRate: $monthlyInterestRate');
-    print('numberOfPayments: $numberOfPayments');
-    print('monthlyMortgage: $monthlyMortgage');
-    print('monthlyPropertyTax: $monthlyPropertyTax');
-    print('monthlyPMI: $monthlyPMI');
-    print('monthlyHomeInsurance: $monthlyHomeInsurance');
+    double anualOwnerHomeInsurance = annualHomeInsurance /* / 12*/;
 
     // Calculate the total monthly payment
-    return monthlyMortgage + monthlyPropertyTax + monthlyHomeInsurance + monthlyPMI + hoaFees;
+    return monthlyMortgage + monthlyPropertyTax + anualOwnerHomeInsurance + hoaFees;
+
+    /// will add this if require monthlyPMI
   }
 }
