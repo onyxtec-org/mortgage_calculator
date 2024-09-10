@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:mortgage_calculator/calculator_form_screen.dart';
-import 'package:mortgage_calculator/common/constants/constants.dart';
-import 'package:mortgage_calculator/common/constants/icons_constant.dart';
-import 'package:mortgage_calculator/common/constants/my_style.dart';
-import 'package:mortgage_calculator/common/widgets/background_container.dart';
-import 'package:mortgage_calculator/common/widgets/elevated_button.dart';
-import 'package:mortgage_calculator/common/widgets/ink_well_widget.dart';
-import 'package:mortgage_calculator/common/widgets/navigation_bar.dart';
-import 'package:mortgage_calculator/common/widgets/normal_text_view.dart';
-import 'package:mortgage_calculator/common/widgets/svg_icon_widget.dart';
-import 'package:mortgage_calculator/common/widgets/title_text_view.dart';
-import 'package:mortgage_calculator/history_screen.dart';
+import 'package:mortgage_calculator/models/mortgage_loan_model.dart';
+import 'package:mortgage_calculator/result_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+import 'common/constants/constants.dart';
+import 'common/constants/icons_constant.dart';
+import 'common/constants/my_style.dart';
+import 'common/widgets/background_container.dart';
+import 'common/widgets/elevated_button.dart';
+import 'common/widgets/navigation_bar.dart';
+import 'common/widgets/normal_text_view.dart';
+import 'common/widgets/svg_icon_widget.dart';
+import 'common/widgets/title_text_view.dart';
+
+class HistoryScreen extends StatefulWidget {
+  const HistoryScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -31,7 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               // NavBar remains fixed at the top
               NavBar(
-                titleText: "Mortgage Cal",
+                backIcon: IconsConstant.icBackArrow,
+                iconsColor: MyStyle.whiteColor,
+                titleText: "History",
                 titleColor: MyStyle.whiteColor,
               ),
               const SizedBox(height: MyStyle.twenty),
@@ -40,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(MyStyle.twenty),
+                  padding: const EdgeInsets.only(left: MyStyle.twenty, right: MyStyle.twenty, bottom: MyStyle.twenty),
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(MyStyle.twentyFour),
@@ -50,79 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: CustomScrollView(
                     slivers: [
-                      // Static section for Mortgage Calculator
-                      SliverToBoxAdapter(
-                        child: BackgroundContainer(
-                          color: MyStyle.whiteColor,
-                          borderRadius: MyStyle.twelve,
-                          isBorder: false,
-                          child: Padding(
-                            padding: const EdgeInsets.all(MyStyle.twelve),
-                            child: Row(
-                              children: [
-                                const SvgIconWidget(iconPath: IconsConstant.icHome),
-                                const SizedBox(width: 20.0),
-                                const Expanded(
-                                  child: TitleTextView(
-                                    text: Constants.mortgage,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Button(
-                                  buttonHeight: 40,
-                                  onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => CalculatorFormScreen()));
-                                  },
-                                  text: "Calculate",
-                                  fontSize: MyStyle.fourteen,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: MyStyle.twenty, bottom: MyStyle.eight),
-                          child: Row(
-                            children: [
-                              const TitleTextView(
-                                text: Constants.history,
-                                fontSize: MyStyle.twenty,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              const Spacer(),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryScreen()));
-                                },
-                                child: const NormalTextView(text: 'See all', color: MyStyle.primaryLightColor, fontSize: MyStyle.twelve),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
                       // List section for history (scrollable)
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            // Determine the border radius based on the index
-                            BorderRadiusGeometry borderRadius;
-                            EdgeInsets paddingVal;
-                            if (index == 0) {
-                              paddingVal = const EdgeInsets.only(top: 20);
-                              borderRadius = const BorderRadius.vertical(top: Radius.circular(MyStyle.twelve));
-                            } else if (index == 3) {
-                              borderRadius = const BorderRadius.vertical(bottom: Radius.circular(MyStyle.twelve));
-                              paddingVal = const EdgeInsets.only(bottom: 20);
-                            } else {
-                              borderRadius = BorderRadius.zero;
-                              paddingVal = EdgeInsets.zero;
-                            }
                             return Container(
-                              padding: paddingVal,
-                              decoration: BoxDecoration(borderRadius: borderRadius, color: MyStyle.whiteColor),
+                              padding: const EdgeInsets.symmetric(vertical: MyStyle.ten),
+                              margin: EdgeInsets.only(bottom: index < 3 ? MyStyle.ten : 0.0, top: index == 0 ? MyStyle.twenty : 0.0),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(MyStyle.twelve), color: MyStyle.whiteColor),
                               child: Padding(
                                 padding:
                                     EdgeInsets.only(bottom: index == 3 ? 0 : MyStyle.ten, left: MyStyle.fourteen, right: MyStyle.fourteen),
@@ -130,9 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     Row(
                                       children: [
-                                        const Column(
+                                        Column(
                                           children: [
-                                            BackgroundContainer(
+                                            const BackgroundContainer(
                                               color: MyStyle.iconsBgColor,
                                               borderRadius: MyStyle.ten,
                                               isBorder: false,
@@ -191,7 +128,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Button(
                                               buttonHeight: MyStyle.thirty,
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                MortgageLoanModel updatedModel = MortgageLoanModel(
+                                                  id: 0,
+                                                  homePrice: 50000.0,
+                                                  // Updated value
+                                                  propertyTax: 500.0,
+                                                  downPayment: 20000.0,
+                                                  pmi: 50.0,
+                                                  loanTerm: 5,
+                                                  // in years
+                                                  homeOwnerInsurance: 300.0,
+                                                  interestRate: 5.0,
+                                                  //in percent
+                                                  hoaFees: 300.0,
+                                                );
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => ResultScreen(
+                                                              mortgageLoanModel: updatedModel,
+                                                            )));
+                                              },
                                               text: 'View',
                                               fontSize: MyStyle.fourteen,
                                             ),
@@ -207,12 +165,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         )
                                       ],
                                     ),
-                                    if (index != 3)
-                                      Container(
-                                        height: 1,
-                                        color: MyStyle.grayColor,
-                                        margin: EdgeInsets.only(top: MyStyle.ten),
-                                      )
                                   ],
                                 ),
                               ),

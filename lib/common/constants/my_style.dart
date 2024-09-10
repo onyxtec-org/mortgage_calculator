@@ -12,7 +12,7 @@ class MyStyle {
   static const Color transparentColor = Color(0xFF575656);
   static const Color redColor = Color(0xFFF53A25);
   static const Color whiteColor = Color(0xFFFFFFFF);
-  static const Color backgroundColor = Color(0xFFF8F8F8);
+  static const Color backgroundColor = Color(0xFFEEEBEB);
   static const Color dropDownIconColor = Color(0xFF979797);
   static const Color blueColor = Color(0xFA0083F8);
   static const Color iconsBgColor = Color(0xFFDDFCFB);
