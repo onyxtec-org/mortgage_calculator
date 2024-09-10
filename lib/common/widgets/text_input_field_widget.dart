@@ -66,7 +66,7 @@ class TextInputFieldWidget extends StatelessWidget {
                       child: Text(
                         suffixText!,
                         style: TextStyle(
-                          color: MyStyle.primaryColor,
+                          color: MyStyle.grayColor,
                           fontSize: MediaQuery.of(context).size.width < 600 ? MyStyle.fourteen : MyStyle.eighteen,
                         ),
                         overflow: TextOverflow.ellipsis, // Ensure text doesn't overflow
