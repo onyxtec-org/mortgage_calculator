@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               text: '5.0%',
                                               fontWeight: FontWeight.bold,
                                             ),
-                                            NormalTextView(text: 'Interest', color: MyStyle.greyColor, fontSize: MyStyle.twelve)
+                                            NormalTextView(text: 'Interest', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
                                           ],
                                         ),
                                         SizedBox(width: MyStyle.ten),
@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               TitleTextView(text: "Title text or title view"),
                                               NormalTextView(
                                                 text: '08/06/2024',
-                                                color: MyStyle.greyColor,
+                                                color: MyStyle.grayColor,
                                                 fontSize: MyStyle.twelve,
                                                 textAlign: TextAlign.start,
                                               ),
@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               NormalTextView(
                                                 text: 'Duration',
-                                                color: MyStyle.greyColor,
+                                                color: MyStyle.grayColor,
                                                 fontSize: MyStyle.twelve,
                                                 textAlign: TextAlign.center,
                                                 alignment: Alignment.center,
@@ -186,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               text: '5,000\$',
                                               fontWeight: FontWeight.bold,
                                             ),
-                                            NormalTextView(text: 'Investment Amount', color: MyStyle.greyColor, fontSize: MyStyle.twelve)
+                                            NormalTextView(text: 'Investment Amount', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
                                           ],
                                         )
                                       ],
@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     if (index != 3)
                                       Container(
                                         height: 1,
-                                        color: MyStyle.greyColor,
+                                        color: MyStyle.grayColor,
                                         margin: EdgeInsets.only(top: MyStyle.ten),
                                       )
                                   ],

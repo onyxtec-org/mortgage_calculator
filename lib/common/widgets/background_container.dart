@@ -15,7 +15,7 @@ class BackgroundContainer extends StatelessWidget {
     required this.borderRadius,
     required this.isBorder,
     required this.child,
-    this.borderColor = MyStyle.greyColor,
+    this.borderColor = MyStyle.grayColor,
   }) : super(key: key);
 
   @override
