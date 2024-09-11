@@ -86,7 +86,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                         const SizedBox(height: MyStyle.four),
                         TextInputFieldWidget(
                           controller: _titleTextFieldController,
-                          inputType: TextInputType.number,
+                          inputType: TextInputType.text,
                           inputAction: TextInputAction.next,
                           errorText: _titleError,
                           onChanged: (value) {
