@@ -4,6 +4,7 @@ class Constants {
   static const String mortgage = "Mortgages";
   static const String history = "History";
   static const String calculator = "Calculator";
+  static const String title = "Title";
   static const String homePrice = "Home Price";
   static const String downPayment = "Down Payment";
   static const String loanTerm = "Loan Term";

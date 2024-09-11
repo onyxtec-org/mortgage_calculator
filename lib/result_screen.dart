@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mortgage_calculator/app_provider.dart';
+import 'package:mortgage_calculator/common/utils/utils.dart';
+import 'package:mortgage_calculator/common/widgets/alert_dialog.dart';
 import 'package:mortgage_calculator/common/widgets/background_container.dart';
 import 'package:mortgage_calculator/common/widgets/normal_text_view.dart';
 import 'package:mortgage_calculator/common/widgets/title_text_view.dart';
+import 'package:mortgage_calculator/local_db/mortgage_db_manager.dart';
 import 'package:mortgage_calculator/managers/mortgage_loan_manager.dart';
 import 'package:mortgage_calculator/models/mortgage_loan_model.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:provider/provider.dart';
 
 import 'common/constants/constants.dart';
 import 'common/constants/icons_constant.dart';
@@ -15,41 +20,49 @@ import 'managers/result.dart';
 
 class ResultScreen extends StatefulWidget {
   MortgageLoanModel? mortgageLoanModel;
+  bool isHistory;
 
-  ResultScreen({super.key, this.mortgageLoanModel});
+  ResultScreen({
+    super.key,
+    this.mortgageLoanModel,
+    required this.isHistory,
+  });
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
 }
 
 class _ResultScreenState extends State<ResultScreen> {
+  AppProvider? appProvider;
   late Result totalMonthlyPayment;
   Map<String, double> dataMap = {};
+  MortgageLoanModel? mortgageData;
 
   @override
   void initState() {
     super.initState();
+    mortgageData = widget.mortgageLoanModel;
     calculateResult();
   }
 
-  void calculateResult() {
-    var loanData = widget.mortgageLoanModel;
-    if (loanData != null) {
+  Future<void> calculateResult() async {
+    // var loanData = widget.mortgageLoanModel;
+    if (mortgageData != null) {
       totalMonthlyPayment = MortgageLoanManager.calculateTotalMonthlyPayment(
-          homePrice: loanData.homePrice,
-          downPayment: loanData.downPayment,
-          loanTermYears: loanData.loanTerm,
-          annualInterestRate: loanData.interestRate,
-          annualPropertyTax: loanData.propertyTax,
-          annualHomeInsurance: loanData.homeOwnerInsurance,
-          pmiAmount: loanData.pmi,
-          hoaFees: loanData.hoaFees);
+          homePrice: mortgageData!.homePrice,
+          downPayment: mortgageData!.downPayment,
+          loanTermYears: mortgageData!.loanTerm,
+          annualInterestRate: mortgageData!.interestRate,
+          annualPropertyTax: mortgageData!.propertyTax,
+          annualHomeInsurance: mortgageData!.homeOwnerInsurance,
+          pmiAmount: mortgageData!.pmi,
+          hoaFees: mortgageData!.hoaFees);
       dataMap = {
         'Principle & interest': totalMonthlyPayment.principleAndInterest,
-        'Property Tax': loanData.propertyTax,
-        'PMI': loanData.pmi,
-        'Homeowner insurance': loanData.homeOwnerInsurance,
-        'HOA fees': loanData.hoaFees
+        'Property Tax': mortgageData!.propertyTax,
+        'PMI': mortgageData!.pmi,
+        'Homeowner insurance': mortgageData!.homeOwnerInsurance,
+        'HOA fees': mortgageData!.hoaFees
       };
       setState(() {});
     }
@@ -57,6 +70,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
   @override
   Widget build(BuildContext context) {
+    appProvider = Provider.of<AppProvider>(context);
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -69,6 +83,16 @@ class _ResultScreenState extends State<ResultScreen> {
                 iconsColor: MyStyle.whiteColor,
                 titleText: Constants.result,
                 titleColor: MyStyle.whiteColor,
+                icons: widget.isHistory ? [IconsConstant.icDelete] : [],
+                onIconTap: (index) {
+                  showWarning((callback) async {
+                    if (callback) {
+                      await MortgageDbManager.deleteMortgage(mortgageData!);
+                      appProvider!.updateProvider(updateStatus: true);
+                      Navigator.of(context).pop();
+                    }
+                  });
+                },
               ),
               const SizedBox(height: MyStyle.twenty),
               Expanded(
@@ -87,9 +111,9 @@ class _ResultScreenState extends State<ResultScreen> {
                       SliverToBoxAdapter(
                         child: Column(
                           children: [
-                            SizedBox(height: MyStyle.twenty),
-                            const TitleTextView(
-                              text: Constants.loanInformation,
+                            const SizedBox(height: MyStyle.twenty),
+                            TitleTextView(
+                              text: mortgageData!.title,
                               fontWeight: FontWeight.bold,
                             ),
                             const SizedBox(height: MyStyle.twenty),
@@ -281,10 +305,20 @@ class _ResultScreenState extends State<ResultScreen> {
                           width: double.infinity,
                           margin: EdgeInsets.symmetric(vertical: MyStyle.twenty),
                           child: Button(
-                              onPressed: () {
-                                Navigator.pop(context);
+                              onPressed: () async {
+                                if (!widget.isHistory) {
+                                  mortgageData?.monthlyMortgage = totalMonthlyPayment.principleAndInterest;
+                                  int currentTime = Utils.getUnixTimeStamp();
+                                  mortgageData?.createdAt = currentTime;
+                                  mortgageData?.updatedAt = currentTime;
+                                  int status = await MortgageDbManager.insertMortgage(mortgageData!);
+                                  appProvider!.updateProvider(updateStatus: true);
+                                  Navigator.popUntil(context, (route) => route.isFirst);
+                                } else {
+                                  Navigator.pop(context);
+                                }
                               },
-                              text: 'Back'),
+                              text: widget.isHistory ? 'Back' : 'Save'),
                         ),
                       ),
                     ],
@@ -296,5 +330,25 @@ class _ResultScreenState extends State<ResultScreen> {
         ),
       ),
     );
+  }
+
+  void showWarning(Function(bool) callback) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialogWidget(
+            titleText: 'Warning',
+            content: 'Are you sure you '
+                'want to delete record?',
+            pressedYes: () {
+              Navigator.pop(context);
+              callback(true);
+            },
+            pressedNo: () {
+              Navigator.pop(context);
+              callback(false);
+            },
+          );
+        });
   }
 }

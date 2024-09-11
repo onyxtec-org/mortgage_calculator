@@ -43,15 +43,15 @@ class AlertDialogWidget extends StatelessWidget {
         ],
       ),
       actions: [
-        TextButton(
-          onPressed: pressedYes,
-          child: const Text('Yes'),
-        ),
         if (pressedNo != null)
           TextButton(
             onPressed: pressedNo,
             child: const Text('No'),
           ),
+        TextButton(
+          onPressed: pressedYes,
+          child: const Text('Yes'),
+        ),
       ],
     );
   }

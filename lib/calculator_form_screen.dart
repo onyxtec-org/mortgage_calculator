@@ -22,6 +22,7 @@ class CalculatorFormScreen extends StatefulWidget {
 }
 
 class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
+  String? _titleError;
   String? _homePriceError;
   String? _downPaymentError;
   String? _loanTermError;
@@ -31,6 +32,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
   String? _homeOwnerInsuranceError;
   String? _hoaFeesError;
 
+  final TextEditingController _titleTextFieldController = TextEditingController();
   final TextEditingController _homePriceTextFieldController = TextEditingController();
   final TextEditingController _downPaymentTextFieldController = TextEditingController();
   final TextEditingController _downPaymentPercentTextFieldController = TextEditingController();
@@ -75,6 +77,24 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
+                        const NormalTextView(
+                          text: Constants.title,
+                          color: MyStyle.primaryColor,
+                          fontSize: MyStyle.fourteen,
+                          isIcons: false,
+                        ),
+                        const SizedBox(height: MyStyle.four),
+                        TextInputFieldWidget(
+                          controller: _titleTextFieldController,
+                          inputType: TextInputType.number,
+                          inputAction: TextInputAction.next,
+                          errorText: _titleError,
+                          onChanged: (value) {
+                            setState(() {
+                              _titleError = value.isEmpty ? 'Please enter title' : null;
+                            });
+                          },
+                        ),
                         NormalTextView(
                           text: Constants.homePrice,
                           color: MyStyle.primaryColor,
@@ -170,7 +190,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                                     Expanded(
                                         child: NormalTextView(
                                             text: loanToValue == null ? '' : loanToValue!.toStringAsFixed(2),
-                                            color: MyStyle.grayColor,
+                                            color: MyStyle.primaryColor,
                                             fontSize: MyStyle.fourteen)),
                                     const NormalTextView(text: '%', color: MyStyle.grayColor, fontSize: MyStyle.fourteen),
                                   ],
@@ -408,6 +428,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
 
   void validateData() {
     final fieldValidations = {
+      _titleTextFieldController: 'Enter title',
       _homePriceTextFieldController: 'Home price must be positive',
       _downPaymentTextFieldController: 'Down payment must be positive',
       _loanTermTextFieldController: 'Loan term must be positive',
@@ -427,25 +448,26 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
       setState(() {
         String? errorMessage;
         if (isEmpty) {
-          errorMessage = 'Please enter a value';
+          errorMessage = controller == _titleTextFieldController ? 'Please enter title' : 'Please enter a value';
         } else if (value == null || value <= 0) {
-          errorMessage = positiveErrorMessage;
+          errorMessage = controller == _titleTextFieldController ? null : positiveErrorMessage;
         }
 
         // Update the corresponding error variable dynamically
         final errorVariable = _getErrorVariable(controller);
         errorVariable?.call(errorMessage);
       });
-
-      if (isEmpty || value == null || value <= 0) {
+      if (controller == _titleTextFieldController && !isEmpty) {
+        allValid = true;
+      } else if (isEmpty || value == null || value <= 0) {
         allValid = false;
+        print('invalid');
       }
     });
 
     if (allValid) {
       // All inputs are valid, proceed
       MortgageLoanModel updatedModel = MortgageLoanModel(
-        id: model?.id,
         homePrice: double.parse(_homePriceTextFieldController.text),
         downPayment: double.parse(_downPaymentTextFieldController.text),
         loanTerm: int.parse(_loanTermTextFieldController.text),
@@ -456,12 +478,14 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
         pmi: double.parse(_pmiTextFieldController.text),
         homeOwnerInsurance: double.parse(_homeOwnerInsTextFieldController.text),
         hoaFees: double.parse(_hoaFeesTextFieldController.text),
+        title: _titleTextFieldController.text,
       );
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
             mortgageLoanModel: updatedModel,
+            isHistory: false,
           ),
         ),
       );
@@ -470,6 +494,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
   }
 
   Function(String?)? _getErrorVariable(TextEditingController controller) {
+    if (controller == _titleTextFieldController) return (String? error) => _titleError = error;
     if (controller == _homePriceTextFieldController) return (String? error) => _homePriceError = error;
     if (controller == _downPaymentTextFieldController) return (String? error) => _downPaymentError = error;
     if (controller == _loanTermTextFieldController) return (String? error) => _loanTermError = error;
@@ -492,6 +517,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
 
   void resetFields() {
     // Clear text from all controllers
+    _titleTextFieldController.clear();
     _homePriceTextFieldController.clear();
     _downPaymentTextFieldController.clear();
     _downPaymentPercentTextFieldController.clear();
@@ -504,6 +530,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
 
     // Reset all error messages
     setState(() {
+      _titleError = null;
       _homePriceError = null;
       _downPaymentError = null;
       _loanTermError = null;

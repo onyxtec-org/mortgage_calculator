@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mortgage_calculator/app_provider.dart';
 import 'package:mortgage_calculator/splash_screen.dart';
+import 'package:provider/provider.dart';
 
 import 'common/constants/my_style.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => AppProvider(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

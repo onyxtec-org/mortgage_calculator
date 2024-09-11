@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mortgage_calculator/common/widgets/no_record_found_widget.dart';
+import 'package:mortgage_calculator/local_db/mortgage_db_manager.dart';
 import 'package:mortgage_calculator/models/mortgage_loan_model.dart';
 import 'package:mortgage_calculator/result_screen.dart';
+import 'package:provider/provider.dart';
 
+import 'app_provider.dart';
 import 'common/constants/constants.dart';
 import 'common/constants/icons_constant.dart';
 import 'common/constants/my_style.dart';
+import 'common/utils/utils.dart';
 import 'common/widgets/background_container.dart';
 import 'common/widgets/elevated_button.dart';
 import 'common/widgets/navigation_bar.dart';
@@ -20,8 +25,34 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  AppProvider? appProvider;
+  List<MortgageLoanModel> mortgageDataList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHistory();
+  }
+
+  Future<void> _loadHistory() async {
+    mortgageDataList = await MortgageDbManager.fetchMortgage();
+    if (appProvider != null && appProvider!.isUpdate) {
+      appProvider!.updateProvider(updateStatus: false);
+    }
+    setState(() {});
+  }
+
+  void _stateManager() {
+    appProvider = Provider.of<AppProvider>(context);
+    if (appProvider != null && appProvider!.isUpdate) {
+      print('Called');
+      _loadHistory();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _stateManager();
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -53,126 +84,120 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   child: CustomScrollView(
                     slivers: [
                       // List section for history (scrollable)
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            return Container(
-                              padding: const EdgeInsets.symmetric(vertical: MyStyle.ten),
-                              margin: EdgeInsets.only(bottom: index < 3 ? MyStyle.ten : 0.0, top: index == 0 ? MyStyle.twenty : 0.0),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(MyStyle.twelve), color: MyStyle.whiteColor),
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.only(bottom: index == 3 ? 0 : MyStyle.ten, left: MyStyle.fourteen, right: MyStyle.fourteen),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            const BackgroundContainer(
-                                              color: MyStyle.iconsBgColor,
-                                              borderRadius: MyStyle.ten,
-                                              isBorder: false,
-                                              borderColor: MyStyle.iconsBgColor,
-                                              child: Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: SvgIconWidget(
-                                                  iconPath: IconsConstant.icHome,
+                      mortgageDataList.isEmpty
+                          ? const SliverToBoxAdapter(
+                              child: NoRecordFoundWidget(
+                                message: 'No History found',
+                              ),
+                            )
+                          : SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                childCount: mortgageDataList.length, // Update based on your list count
+                                (context, index) {
+                                  MortgageLoanModel mortgageData = mortgageDataList[index];
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(vertical: MyStyle.ten),
+                                    margin: EdgeInsets.only(
+                                        bottom: index < mortgageDataList.length - 1 ? MyStyle.ten : 0.0,
+                                        top: index == 0 ? MyStyle.twenty : 0.0),
+                                    decoration:
+                                        BoxDecoration(borderRadius: BorderRadius.circular(MyStyle.twelve), color: MyStyle.whiteColor),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: index == mortgageDataList.length - 1 ? 0 : MyStyle.ten,
+                                          left: MyStyle.fourteen,
+                                          right: MyStyle.fourteen),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  const BackgroundContainer(
+                                                    color: MyStyle.iconsBgColor,
+                                                    borderRadius: MyStyle.ten,
+                                                    isBorder: false,
+                                                    borderColor: MyStyle.iconsBgColor,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(8.0),
+                                                      child: SvgIconWidget(
+                                                        iconPath: IconsConstant.icHome,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: MyStyle.fourteen),
+                                                  TitleTextView(
+                                                    text: '${mortgageData.interestRate} %',
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  const NormalTextView(text: 'Interest', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
+                                                ],
+                                              ),
+                                              const SizedBox(width: MyStyle.ten),
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    TitleTextView(
+                                                      text: mortgageData.title,
+                                                      textAlign: TextAlign.start,
+                                                    ),
+                                                    NormalTextView(
+                                                      text: Utils.formatDate(mortgageData.createdAt!),
+                                                      color: MyStyle.grayColor,
+                                                      fontSize: MyStyle.twelve,
+                                                      textAlign: TextAlign.start,
+                                                      alignment: Alignment.center,
+                                                    ),
+                                                    const SizedBox(height: MyStyle.fourteen),
+                                                    TitleTextView(
+                                                      alignment: Alignment.center,
+                                                      text: '${mortgageData.loanTerm.toString()} Years',
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                    const TitleTextView(
+                                                      alignment: Alignment.center,
+                                                      text: 'Duration',
+                                                      fontWeight: FontWeight.normal,
+                                                      fontSize: MyStyle.twelve,
+                                                      fontColor: MyStyle.grayColor,
+                                                    )
+                                                  ],
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: MyStyle.fourteen,
-                                            ),
-                                            TitleTextView(
-                                              text: '5.0%',
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            NormalTextView(text: 'Interest', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
-                                          ],
-                                        ),
-                                        SizedBox(width: MyStyle.ten),
-                                        const Expanded(
-                                          child: Column(
-                                            children: [
-                                              TitleTextView(
-                                                text: "Title text or title view",
-                                                textAlign: TextAlign.start,
-                                              ),
-                                              NormalTextView(
-                                                text: '08/06/2024',
-                                                color: MyStyle.grayColor,
-                                                fontSize: MyStyle.twelve,
-                                                textAlign: TextAlign.start,
-                                                alignment: Alignment.center,
-                                              ),
-                                              SizedBox(
-                                                height: MyStyle.fourteen,
-                                              ),
-                                              TitleTextView(
-                                                alignment: Alignment.center,
-                                                text: '12 Months',
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              TitleTextView(
-                                                alignment: Alignment.center,
-                                                text: 'Duration',
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: MyStyle.twelve,
-                                                fontColor: MyStyle.grayColor,
+                                              Column(
+                                                children: [
+                                                  Button(
+                                                    buttonHeight: MyStyle.thirty,
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) => ResultScreen(
+                                                                    mortgageLoanModel: mortgageData,
+                                                                    isHistory: true,
+                                                                  )));
+                                                    },
+                                                    text: 'View',
+                                                    fontSize: MyStyle.fourteen,
+                                                  ),
+                                                  const SizedBox(height: MyStyle.fourteen),
+                                                  TitleTextView(
+                                                    text: '\$${mortgageData.homePrice}',
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  const NormalTextView(
+                                                      text: 'Investment Amount', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
+                                                ],
                                               )
                                             ],
                                           ),
-                                        ),
-                                        Column(
-                                          children: [
-                                            Button(
-                                              buttonHeight: MyStyle.thirty,
-                                              onPressed: () {
-                                                MortgageLoanModel updatedModel = MortgageLoanModel(
-                                                  id: 0,
-                                                  homePrice: 50000.0,
-                                                  // Updated value
-                                                  propertyTax: 500.0,
-                                                  downPayment: 20000.0,
-                                                  pmi: 50.0,
-                                                  loanTerm: 5,
-                                                  // in years
-                                                  homeOwnerInsurance: 300.0,
-                                                  interestRate: 5.0,
-                                                  //in percent
-                                                  hoaFees: 300.0,
-                                                );
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => ResultScreen(
-                                                              mortgageLoanModel: updatedModel,
-                                                            )));
-                                              },
-                                              text: 'View',
-                                              fontSize: MyStyle.fourteen,
-                                            ),
-                                            SizedBox(
-                                              height: MyStyle.fourteen,
-                                            ),
-                                            TitleTextView(
-                                              text: '\$5,000',
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            NormalTextView(text: 'Investment Amount', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
-                                          ],
-                                        )
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                          childCount: 4, // Update based on your list count
-                        ),
-                      ),
+                            ),
                     ],
                   ),
                 ),
