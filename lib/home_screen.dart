@@ -1,16 +1,24 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mortgage_calculator/calculator_form_screen.dart';
 import 'package:mortgage_calculator/common/constants/constants.dart';
 import 'package:mortgage_calculator/common/constants/icons_constant.dart';
 import 'package:mortgage_calculator/common/constants/my_style.dart';
+import 'package:mortgage_calculator/common/utils/utils.dart';
 import 'package:mortgage_calculator/common/widgets/background_container.dart';
 import 'package:mortgage_calculator/common/widgets/elevated_button.dart';
-import 'package:mortgage_calculator/common/widgets/ink_well_widget.dart';
 import 'package:mortgage_calculator/common/widgets/navigation_bar.dart';
 import 'package:mortgage_calculator/common/widgets/normal_text_view.dart';
 import 'package:mortgage_calculator/common/widgets/svg_icon_widget.dart';
 import 'package:mortgage_calculator/common/widgets/title_text_view.dart';
 import 'package:mortgage_calculator/history_screen.dart';
+import 'package:mortgage_calculator/local_db/mortgage_db_manager.dart';
+import 'package:mortgage_calculator/result_screen.dart';
+import 'package:provider/provider.dart';
+
+import 'app_provider.dart';
+import 'common/widgets/no_record_found_widget.dart';
+import 'models/mortgage_loan_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,8 +28,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  AppProvider? appProvider;
+  List<MortgageLoanModel> mortgageHistoryData = [];
+  int historyLimit = 4;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMortgageHistory();
+  }
+
+  Future<void> fetchMortgageHistory() async {
+    mortgageHistoryData = await MortgageDbManager.fetchMortgage();
+    if (appProvider != null && appProvider!.isUpdate) {
+      appProvider!.updateProvider(updateStatus: false);
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    _stateManager();
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -73,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Button(
                                     buttonHeight: 40,
                                     onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => CalculatorFormScreen()));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => const CalculatorFormScreen()));
                                     },
                                     text: "Calculate",
                                     fontSize: MyStyle.fourteen,
@@ -85,145 +112,166 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       SliverToBoxAdapter(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: MyStyle.twenty, bottom: MyStyle.eight),
-                          child: Row(
-                            children: [
-                              const TitleTextView(
-                                text: Constants.history,
-                                fontSize: MyStyle.twenty,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              const Spacer(),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryScreen()));
-                                },
-                                child: const NormalTextView(text: 'See all', color: MyStyle.primaryLightColor, fontSize: MyStyle.twelve),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // List section for history (scrollable)
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            // Determine the border radius based on the index
-                            BorderRadiusGeometry borderRadius;
-                            EdgeInsets paddingVal;
-                            if (index == 0) {
-                              paddingVal = const EdgeInsets.only(top: 20);
-                              borderRadius = const BorderRadius.vertical(top: Radius.circular(MyStyle.twelve));
-                            } else if (index == 3) {
-                              borderRadius = const BorderRadius.vertical(bottom: Radius.circular(MyStyle.twelve));
-                              paddingVal = const EdgeInsets.only(bottom: 20);
-                            } else {
-                              borderRadius = BorderRadius.zero;
-                              paddingVal = EdgeInsets.zero;
-                            }
-                            return Container(
-                              padding: paddingVal,
-                              decoration: BoxDecoration(borderRadius: borderRadius, color: MyStyle.whiteColor),
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.only(bottom: index == 3 ? 0 : MyStyle.ten, left: MyStyle.fourteen, right: MyStyle.fourteen),
-                                child: Column(
+                        child: mortgageHistoryData.isEmpty
+                            ? Container()
+                            : Padding(
+                                padding: const EdgeInsets.only(top: MyStyle.twenty, bottom: MyStyle.eight),
+                                child: Row(
                                   children: [
-                                    Row(
-                                      children: [
-                                        const Column(
-                                          children: [
-                                            BackgroundContainer(
-                                              color: MyStyle.iconsBgColor,
-                                              borderRadius: MyStyle.ten,
-                                              isBorder: false,
-                                              borderColor: MyStyle.iconsBgColor,
-                                              child: Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: SvgIconWidget(
-                                                  iconPath: IconsConstant.icHome,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: MyStyle.fourteen,
-                                            ),
-                                            TitleTextView(
-                                              text: '5.0%',
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            NormalTextView(text: 'Interest', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
-                                          ],
-                                        ),
-                                        SizedBox(width: MyStyle.ten),
-                                        const Expanded(
-                                          child: Column(
-                                            children: [
-                                              TitleTextView(
-                                                text: "Title text or title view",
-                                                textAlign: TextAlign.start,
-                                              ),
-                                              NormalTextView(
-                                                text: '08/06/2024',
-                                                color: MyStyle.grayColor,
-                                                fontSize: MyStyle.twelve,
-                                                textAlign: TextAlign.start,
-                                                alignment: Alignment.center,
-                                              ),
-                                              SizedBox(
-                                                height: MyStyle.fourteen,
-                                              ),
-                                              TitleTextView(
-                                                alignment: Alignment.center,
-                                                text: '12 Months',
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              TitleTextView(
-                                                alignment: Alignment.center,
-                                                text: 'Duration',
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: MyStyle.twelve,
-                                                fontColor: MyStyle.grayColor,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Column(
-                                          children: [
-                                            Button(
-                                              buttonHeight: MyStyle.thirty,
-                                              onPressed: () {},
-                                              text: 'View',
-                                              fontSize: MyStyle.fourteen,
-                                            ),
-                                            SizedBox(
-                                              height: MyStyle.fourteen,
-                                            ),
-                                            TitleTextView(
-                                              text: '\$5,000',
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            NormalTextView(text: 'Investment Amount', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
-                                          ],
-                                        )
-                                      ],
+                                    const TitleTextView(
+                                      text: Constants.history,
+                                      fontSize: MyStyle.twenty,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    if (index != 3)
-                                      Container(
-                                        height: 1,
-                                        color: MyStyle.grayColor,
-                                        margin: EdgeInsets.only(top: MyStyle.ten),
-                                      )
+                                    const Spacer(),
+                                    if (mortgageHistoryData.take(historyLimit).length > 3)
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => const HistoryScreen()));
+                                        },
+                                        child: const NormalTextView(
+                                            text: 'See all', color: MyStyle.primaryLightColor, fontSize: MyStyle.twelve),
+                                      ),
                                   ],
                                 ),
                               ),
-                            );
-                          },
-                          childCount: 4, // Update based on your list count
-                        ),
                       ),
+
+                      // List section for history (scrollable)
+                      mortgageHistoryData.isEmpty
+                          ? const SliverToBoxAdapter(
+                              child: NoRecordFoundWidget(
+                                message: 'No History found',
+                              ),
+                            )
+                          : SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                childCount: mortgageHistoryData.take(historyLimit).length, // Update based on your list count
+                                (context, index) {
+                                  // Determine the border radius based on the index
+                                  BorderRadiusGeometry borderRadius;
+                                  EdgeInsets paddingVal;
+                                  if (mortgageHistoryData.length == 1) {
+                                    paddingVal = const EdgeInsets.symmetric(vertical: 20);
+                                    borderRadius = BorderRadius.circular(MyStyle.twelve);
+                                  } else if (index == 0) {
+                                    paddingVal = const EdgeInsets.only(top: 20);
+                                    borderRadius = const BorderRadius.vertical(top: Radius.circular(MyStyle.twelve));
+                                  } else if (index == mortgageHistoryData.take(historyLimit).length - 1) {
+                                    borderRadius = const BorderRadius.vertical(bottom: Radius.circular(MyStyle.twelve));
+                                    paddingVal = const EdgeInsets.only(bottom: 20);
+                                  } else {
+                                    borderRadius = BorderRadius.zero;
+                                    paddingVal = EdgeInsets.zero;
+                                  }
+                                  MortgageLoanModel mortgageData = mortgageHistoryData[index];
+                                  return Container(
+                                    padding: paddingVal,
+                                    decoration: BoxDecoration(borderRadius: borderRadius, color: MyStyle.whiteColor),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: index == mortgageHistoryData.length - 1 ? 0 : MyStyle.ten,
+                                          left: MyStyle.fourteen,
+                                          right: MyStyle.fourteen),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  const BackgroundContainer(
+                                                    color: MyStyle.iconsBgColor,
+                                                    borderRadius: MyStyle.ten,
+                                                    isBorder: false,
+                                                    borderColor: MyStyle.iconsBgColor,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(8.0),
+                                                      child: SvgIconWidget(
+                                                        iconPath: IconsConstant.icHome,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: MyStyle.fourteen),
+                                                  TitleTextView(
+                                                    text: '${mortgageData.interestRate}%',
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  const NormalTextView(text: 'Interest', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
+                                                ],
+                                              ),
+                                              const SizedBox(width: MyStyle.ten),
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    TitleTextView(
+                                                      text: mortgageData.title,
+                                                      textAlign: TextAlign.start,
+                                                    ),
+                                                    NormalTextView(
+                                                      text: Utils.formatDate(mortgageData.createdAt!),
+                                                      color: MyStyle.grayColor,
+                                                      fontSize: MyStyle.twelve,
+                                                      textAlign: TextAlign.start,
+                                                      alignment: Alignment.center,
+                                                    ),
+                                                    const SizedBox(height: MyStyle.fourteen),
+                                                    TitleTextView(
+                                                      alignment: Alignment.center,
+                                                      text: '${mortgageData.loanTerm} Years',
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                    const TitleTextView(
+                                                      alignment: Alignment.center,
+                                                      text: 'Duration',
+                                                      fontWeight: FontWeight.normal,
+                                                      fontSize: MyStyle.twelve,
+                                                      fontColor: MyStyle.grayColor,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Column(
+                                                children: [
+                                                  Button(
+                                                    buttonHeight: MyStyle.thirty,
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => ResultScreen(
+                                                            isHistory: true,
+                                                            mortgageLoanModel: mortgageData,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    text: 'View',
+                                                    fontSize: MyStyle.fourteen,
+                                                  ),
+                                                  const SizedBox(height: MyStyle.fourteen),
+                                                  TitleTextView(
+                                                    text: '\$${mortgageData.homePrice}',
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  const NormalTextView(
+                                                      text: 'Loan Amount', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          if (index != mortgageHistoryData.take(historyLimit).length - 1)
+                                            Container(
+                                              height: 1,
+                                              color: MyStyle.grayColor,
+                                              margin: const EdgeInsets.only(top: MyStyle.ten),
+                                            )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                     ],
                   ),
                 ),
@@ -233,5 +281,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  void _stateManager() {
+    appProvider = Provider.of<AppProvider>(context);
+    if (appProvider != null && appProvider!.isUpdate) {
+      print('Called');
+      fetchMortgageHistory();
+    }
   }
 }

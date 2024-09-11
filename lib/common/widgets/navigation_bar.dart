@@ -65,9 +65,9 @@ class NavBar extends StatelessWidget {
                   (index) => IconButton(
                     icon: SvgPicture.asset(
                       icons![index],
-                      height: 24,
-                      width: 24,
-                      color: MyStyle.primaryColor,
+                      height: 28,
+                      width: 28,
+                      color: iconsColor,
                     ),
                     onPressed: () {
                       if (onIconTap != null) {
