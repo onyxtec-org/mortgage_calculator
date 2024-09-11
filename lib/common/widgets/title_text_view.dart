@@ -10,7 +10,7 @@ class TitleTextView extends StatelessWidget {
   final TextAlign textAlign;
   final Color fontColor;
   final FontWeight fontWeight;
-  final int maxLines;
+  final int? maxLines;
 
   const TitleTextView({
     super.key,
@@ -31,7 +31,7 @@ class TitleTextView extends StatelessWidget {
         text,
         textAlign: textAlign,
         maxLines: maxLines,
-        overflow: TextOverflow.ellipsis,
+        overflow: maxLines == null ? TextOverflow.visible : TextOverflow.ellipsis,
         style: TextStyle(
           fontSize: fontSize,
           color: fontColor,

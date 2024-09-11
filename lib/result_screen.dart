@@ -115,6 +115,8 @@ class _ResultScreenState extends State<ResultScreen> {
                             TitleTextView(
                               text: mortgageData!.title,
                               fontWeight: FontWeight.bold,
+                              maxLines: null,
+                              textAlign: TextAlign.start,
                             ),
                             const SizedBox(height: MyStyle.twenty),
                             BackgroundContainer(
