@@ -3,8 +3,8 @@ import 'package:mortgage_calculator/app_provider.dart';
 import 'package:mortgage_calculator/common/utils/utils.dart';
 import 'package:mortgage_calculator/common/widgets/alert_dialog.dart';
 import 'package:mortgage_calculator/common/widgets/background_container.dart';
-import 'package:mortgage_calculator/common/widgets/normal_text_view.dart';
-import 'package:mortgage_calculator/common/widgets/title_text_view.dart';
+import 'package:mortgage_calculator/common/widgets/icon_text_view.dart';
+import 'package:mortgage_calculator/common/widgets/text_view.dart';
 import 'package:mortgage_calculator/local_db/mortgage_db_manager.dart';
 import 'package:mortgage_calculator/managers/mortgage_loan_manager.dart';
 import 'package:mortgage_calculator/models/mortgage_loan_model.dart';
@@ -112,7 +112,7 @@ class _ResultScreenState extends State<ResultScreen> {
                         child: Column(
                           children: [
                             const SizedBox(height: MyStyle.twenty),
-                            TitleTextView(
+                            TextView(
                               text: mortgageData!.title,
                               fontWeight: FontWeight.bold,
                               maxLines: null,
@@ -133,9 +133,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                         Expanded(
                                           child: Column(
                                             children: [
-                                              const NormalTextView(
-                                                  text: Constants.homePrice, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                              TitleTextView(
+                                              const TextView(
+                                                  text: Constants.homePrice, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
+                                              TextView(
                                                 text: '\$${widget.mortgageLoanModel?.homePrice}',
                                                 fontWeight: FontWeight.bold,
                                               )
@@ -145,9 +145,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                         Expanded(
                                           child: Column(
                                             children: [
-                                              const NormalTextView(
-                                                  text: Constants.propertyTax, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                              TitleTextView(
+                                              const TextView(
+                                                  text: Constants.propertyTax, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
+                                              TextView(
                                                 text: '\$${widget.mortgageLoanModel?.propertyTax}',
                                                 fontWeight: FontWeight.bold,
                                               )
@@ -162,9 +162,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                         Expanded(
                                           child: Column(
                                             children: [
-                                              const NormalTextView(
-                                                  text: Constants.downPayment, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                              TitleTextView(
+                                              const TextView(
+                                                  text: Constants.downPayment, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
+                                              TextView(
                                                 text: '\$${widget.mortgageLoanModel?.downPayment}',
                                                 fontWeight: FontWeight.bold,
                                               )
@@ -174,8 +174,8 @@ class _ResultScreenState extends State<ResultScreen> {
                                         Expanded(
                                           child: Column(
                                             children: [
-                                              const NormalTextView(text: Constants.pmi, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                              TitleTextView(
+                                              const TextView(text: Constants.pmi, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
+                                              TextView(
                                                 text: '\$${widget.mortgageLoanModel?.pmi}',
                                                 fontWeight: FontWeight.bold,
                                               )
@@ -190,9 +190,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                         Expanded(
                                           child: Column(
                                             children: [
-                                              const NormalTextView(
-                                                  text: Constants.loanTerm, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                              TitleTextView(
+                                              const TextView(
+                                                  text: Constants.loanTerm, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
+                                              TextView(
                                                 text: '${widget.mortgageLoanModel?.loanTerm} years',
                                                 fontWeight: FontWeight.bold,
                                               )
@@ -202,9 +202,11 @@ class _ResultScreenState extends State<ResultScreen> {
                                         Expanded(
                                           child: Column(
                                             children: [
-                                              const NormalTextView(
-                                                  text: Constants.homeOwnerInsurance, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                              TitleTextView(
+                                              const TextView(
+                                                  text: Constants.homeOwnerInsurance,
+                                                  fontColor: MyStyle.grayColor,
+                                                  fontSize: MyStyle.twelve),
+                                              TextView(
                                                 text: '\$${widget.mortgageLoanModel?.homeOwnerInsurance}',
                                                 fontWeight: FontWeight.bold,
                                               )
@@ -219,9 +221,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                         Expanded(
                                           child: Column(
                                             children: [
-                                              const NormalTextView(
-                                                  text: Constants.interestRate, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                              TitleTextView(
+                                              const TextView(
+                                                  text: Constants.interestRate, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
+                                              TextView(
                                                 text: '${widget.mortgageLoanModel?.interestRate}%',
                                                 fontWeight: FontWeight.bold,
                                               )
@@ -231,9 +233,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                         Expanded(
                                           child: Column(
                                             children: [
-                                              const NormalTextView(
-                                                  text: Constants.hoaFees, color: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                              TitleTextView(
+                                              const TextView(
+                                                  text: Constants.hoaFees, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
+                                              TextView(
                                                 text: '\$${widget.mortgageLoanModel?.hoaFees}',
                                                 fontWeight: FontWeight.bold,
                                               )
