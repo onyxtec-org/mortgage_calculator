@@ -13,9 +13,9 @@ import 'common/utils/utils.dart';
 import 'common/widgets/background_container.dart';
 import 'common/widgets/elevated_button.dart';
 import 'common/widgets/navigation_bar.dart';
-import 'common/widgets/normal_text_view.dart';
+import 'common/widgets/icon_text_view.dart';
 import 'common/widgets/svg_icon_widget.dart';
-import 'common/widgets/title_text_view.dart';
+import 'common/widgets/text_view.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -126,35 +126,36 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                     ),
                                                   ),
                                                   const SizedBox(height: MyStyle.fourteen),
-                                                  TitleTextView(
+                                                  TextView(
                                                     text: '${mortgageData.interestRate} %',
                                                     fontWeight: FontWeight.bold,
                                                   ),
-                                                  const NormalTextView(text: 'Interest', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
+                                                  const TextView(text: 'Interest', fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve)
                                                 ],
                                               ),
                                               const SizedBox(width: MyStyle.ten),
                                               Expanded(
                                                 child: Column(
                                                   children: [
-                                                    TitleTextView(
+                                                    TextView(
                                                       text: mortgageData.title,
                                                       textAlign: TextAlign.start,
+                                                      maxLines: 1,
                                                     ),
-                                                    NormalTextView(
+                                                    TextView(
                                                       text: Utils.formatDate(mortgageData.createdAt!),
-                                                      color: MyStyle.grayColor,
+                                                      fontColor: MyStyle.grayColor,
                                                       fontSize: MyStyle.twelve,
                                                       textAlign: TextAlign.start,
                                                       alignment: Alignment.center,
                                                     ),
                                                     const SizedBox(height: MyStyle.fourteen),
-                                                    TitleTextView(
+                                                    TextView(
                                                       alignment: Alignment.center,
                                                       text: '${mortgageData.loanTerm.toString()} Years',
                                                       fontWeight: FontWeight.bold,
                                                     ),
-                                                    const TitleTextView(
+                                                    const TextView(
                                                       alignment: Alignment.center,
                                                       text: 'Duration',
                                                       fontWeight: FontWeight.normal,
@@ -181,12 +182,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                     fontSize: MyStyle.fourteen,
                                                   ),
                                                   const SizedBox(height: MyStyle.fourteen),
-                                                  TitleTextView(
+                                                  TextView(
                                                     text: '\$${mortgageData.homePrice}',
                                                     fontWeight: FontWeight.bold,
                                                   ),
-                                                  const NormalTextView(
-                                                      text: 'Investment Amount', color: MyStyle.grayColor, fontSize: MyStyle.twelve)
+                                                  const TextView(
+                                                      text: 'Investment Amount', fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve)
                                                 ],
                                               )
                                             ],

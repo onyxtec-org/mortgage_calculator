@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants/constants.dart';
 import '../constants/my_style.dart';
 
-class TitleTextView extends StatelessWidget {
+class TextView extends StatelessWidget {
   final String text;
   final Alignment alignment;
   final double fontSize;
@@ -12,7 +12,7 @@ class TitleTextView extends StatelessWidget {
   final FontWeight fontWeight;
   final int? maxLines;
 
-  const TitleTextView({
+  const TextView({
     super.key,
     required this.text,
     this.alignment = Alignment.centerLeft,
@@ -20,7 +20,7 @@ class TitleTextView extends StatelessWidget {
     this.textAlign = TextAlign.center,
     this.fontColor = MyStyle.primaryColor,
     this.fontWeight = FontWeight.normal,
-    this.maxLines = 1,
+    this.maxLines,
   });
 
   @override

@@ -5,9 +5,9 @@ class MyStyle {
   static const Color offWhiteColor = Color(0xFFF5F5F4);
   static const Color primaryLightColor = Color(0xFF09CAC7);
   static const Color greenColor = Color(0xFF49CC7D);
-  static const Color lightGrey = Color(0xEED0CBCB);
+  static const Color lightGray = Color(0xEED0CBCB);
   static const Color grayColor = Color(0xFF91919F);
-  static const Color darkGreyColor = Color(0xA1282121);
+  static const Color darkGrayColor = Color(0xA1282121);
   static const Color blackColor = Color(0xFF000000);
   static const Color transparentColor = Color(0xFF575656);
   static const Color redColor = Color(0xFFF53A25);

@@ -5,8 +5,8 @@ import 'package:mortgage_calculator/common/widgets/svg_icon_widget.dart';
 
 import '../constants/constants.dart';
 
-class NormalTextView extends StatelessWidget {
-  const NormalTextView({
+class IconTextView extends StatelessWidget {
+  const IconTextView({
     super.key,
     required this.text,
     required this.color,
