@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mortgage_calculator/common/widgets/title_text_view.dart';
+import 'package:mortgage_calculator/common/widgets/text_view.dart';
 
 import '../constants/icons_constant.dart';
 import '../constants/my_style.dart';
@@ -29,7 +29,7 @@ class NoRecordFoundWidget extends StatelessWidget {
               height: 80,
             ),
             const SizedBox(height: 10.0),
-            TitleTextView(
+            TextView(
               text: message,
               fontColor: MyStyle.primaryColor,
               fontWeight: FontWeight.bold,

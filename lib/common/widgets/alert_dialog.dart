@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/my_style.dart';
-import 'title_text_view.dart';
+import 'text_view.dart';
 
 class AlertDialogWidget extends StatelessWidget {
   const AlertDialogWidget({
@@ -22,7 +22,7 @@ class AlertDialogWidget extends StatelessWidget {
     return AlertDialog(
       title: Column(
         children: [
-          TitleTextView(
+          TextView(
             text: titleText,
             fontSize: MyStyle.sixteen,
             alignment: Alignment.center,
@@ -34,7 +34,7 @@ class AlertDialogWidget extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TitleTextView(
+          TextView(
             text: content,
             fontSize: MyStyle.fourteen,
             alignment: Alignment.center,

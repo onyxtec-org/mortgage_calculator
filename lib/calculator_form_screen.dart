@@ -3,7 +3,7 @@ import 'package:mortgage_calculator/common/constants/icons_constant.dart';
 import 'package:mortgage_calculator/common/constants/my_style.dart';
 import 'package:mortgage_calculator/common/widgets/elevated_button.dart';
 import 'package:mortgage_calculator/common/widgets/navigation_bar.dart';
-import 'package:mortgage_calculator/common/widgets/normal_text_view.dart';
+import 'package:mortgage_calculator/common/widgets/icon_text_view.dart';
 import 'package:mortgage_calculator/common/widgets/text_input_container.dart';
 import 'package:mortgage_calculator/common/widgets/text_input_field_widget.dart';
 import 'package:mortgage_calculator/managers/mortgage_loan_manager.dart';
@@ -77,7 +77,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        const NormalTextView(
+                        const IconTextView(
                           text: Constants.title,
                           color: MyStyle.primaryColor,
                           fontSize: MyStyle.fourteen,
@@ -95,7 +95,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                             });
                           },
                         ),
-                        NormalTextView(
+                        IconTextView(
                           text: Constants.homePrice,
                           color: MyStyle.primaryColor,
                           fontSize: MyStyle.fourteen,
@@ -136,7 +136,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                         ),
 
                         /* Down Payment views */
-                        NormalTextView(
+                        IconTextView(
                           text: Constants.downPayment,
                           color: MyStyle.primaryColor,
                           fontSize: MyStyle.fourteen,
@@ -188,11 +188,11 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                        child: NormalTextView(
+                                        child: IconTextView(
                                             text: loanToValue == null ? '' : loanToValue!.toStringAsFixed(2),
                                             color: MyStyle.primaryColor,
                                             fontSize: MyStyle.fourteen)),
-                                    const NormalTextView(text: '%', color: MyStyle.grayColor, fontSize: MyStyle.fourteen),
+                                    const IconTextView(text: '%', color: MyStyle.grayColor, fontSize: MyStyle.fourteen),
                                   ],
                                 ),
                               ),
@@ -201,7 +201,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                         ),
 
                         /* Loan Term view */
-                        NormalTextView(
+                        IconTextView(
                           text: Constants.loanTerm,
                           color: MyStyle.primaryColor,
                           fontSize: MyStyle.fourteen,
@@ -228,7 +228,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                         ),
 
                         /* Interest Rate view */
-                        NormalTextView(
+                        IconTextView(
                           text: Constants.interestRate,
                           color: MyStyle.primaryColor,
                           fontSize: MyStyle.fourteen,
@@ -261,7 +261,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  const NormalTextView(
+                                  const IconTextView(
                                     text: Constants.propertyTax,
                                     color: MyStyle.primaryColor,
                                     fontSize: MyStyle.fourteen,
@@ -291,7 +291,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  const NormalTextView(
+                                  const IconTextView(
                                     text: Constants.pmi,
                                     color: MyStyle.primaryColor,
                                     fontSize: MyStyle.fourteen,
@@ -327,7 +327,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  const NormalTextView(
+                                  const IconTextView(
                                     text: Constants.homeOwnerInsurance,
                                     color: MyStyle.primaryColor,
                                     fontSize: MyStyle.fourteen,
@@ -360,7 +360,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  const NormalTextView(
+                                  const IconTextView(
                                     text: Constants.hoaFees,
                                     color: MyStyle.primaryColor,
                                     fontSize: MyStyle.fourteen,
