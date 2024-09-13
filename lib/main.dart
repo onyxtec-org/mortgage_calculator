@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mortgage_calculator/app_provider.dart';
 import 'package:mortgage_calculator/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'common/constants/my_style.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  unawaited(MobileAds.instance.initialize());
   runApp(ChangeNotifierProvider(
     create: (context) => AppProvider(),
     child: const MyApp(),
