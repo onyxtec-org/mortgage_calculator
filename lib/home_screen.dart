@@ -8,7 +8,6 @@ import 'package:mortgage_calculator/common/utils/utils.dart';
 import 'package:mortgage_calculator/common/widgets/background_container.dart';
 import 'package:mortgage_calculator/common/widgets/elevated_button.dart';
 import 'package:mortgage_calculator/common/widgets/navigation_bar.dart';
-import 'package:mortgage_calculator/common/widgets/icon_text_view.dart';
 import 'package:mortgage_calculator/common/widgets/svg_icon_widget.dart';
 import 'package:mortgage_calculator/common/widgets/text_view.dart';
 import 'package:mortgage_calculator/history_screen.dart';
