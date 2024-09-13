@@ -1,6 +1,7 @@
 class IconsConstant {
   static const String iconsBasePath = 'assets/icons/';
   static const String imagesBasePath = 'assets/images/';
+  static const String gifBasePath = 'assets/gif/';
   static const String icBackArrow = '${iconsBasePath}ic-back.svg';
   static const String icDownArrow = '${iconsBasePath}ic-down-arrow.svg';
   static const String icHome = '${iconsBasePath}ic-home.svg';
@@ -31,4 +32,11 @@ class IconsConstant {
   static const String icAvatar = '${imagesBasePath}avatar.png';
   static const String icLogo = '${imagesBasePath}ic-logo.png';
   static const String icBill = '${imagesBasePath}sui.png';
+
+  ///gif asseets path
+  static const String welcomeGif = '${gifBasePath}welcome.gif';
+  static const String calculateMortgageGif = '${gifBasePath}calculate-mortgage.gif';
+  static const String resultGif = '${gifBasePath}result.gif';
+  static const String historyGif = '${gifBasePath}history.gif';
+  static const String getStartedGif = '${gifBasePath}get-started.gif';
 }
