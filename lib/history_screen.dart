@@ -140,6 +140,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                     TitleTextView(
                                                       text: mortgageData.title,
                                                       textAlign: TextAlign.start,
+                                                      maxLines: 1,
                                                     ),
                                                     NormalTextView(
                                                       text: Utils.formatDate(mortgageData.createdAt!),

@@ -10,7 +10,7 @@ class TextInputContainer extends StatefulWidget {
   const TextInputContainer({
     super.key,
     required this.child,
-    this.borderColor = MyStyle.lightGrey,
+    this.borderColor = MyStyle.lightGray,
     this.fillColor = MyStyle.backgroundColor,
   });
 

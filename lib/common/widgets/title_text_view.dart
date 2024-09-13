@@ -20,7 +20,7 @@ class TitleTextView extends StatelessWidget {
     this.textAlign = TextAlign.center,
     this.fontColor = MyStyle.primaryColor,
     this.fontWeight = FontWeight.normal,
-    this.maxLines = 1,
+    this.maxLines,
   });
 
   @override
