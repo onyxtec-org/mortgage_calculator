@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mortgage_calculator/common/constants/icons_constant.dart';
 import 'package:mortgage_calculator/home_screen.dart';
+import 'package:mortgage_calculator/onboarding_screen.dart';
 import 'common/constants/constants.dart';
 import 'common/constants/my_style.dart';
 
@@ -74,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkStatus() async {
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const OnBoardingScreen()));
 
    /* Utils.requestStoragePermission(context, (isPermissionGranted) async {
       if (!_isDisposed) {

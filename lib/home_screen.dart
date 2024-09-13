@@ -206,6 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     TitleTextView(
                                                       text: mortgageData.title,
                                                       textAlign: TextAlign.start,
+                                                      maxLines: 1,
                                                     ),
                                                     NormalTextView(
                                                       text: Utils.formatDate(mortgageData.createdAt!),
