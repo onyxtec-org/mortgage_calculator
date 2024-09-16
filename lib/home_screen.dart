@@ -15,6 +15,7 @@ import 'package:mortgage_calculator/local_db/mortgage_db_manager.dart';
 import 'package:mortgage_calculator/result_screen.dart';
 import 'package:provider/provider.dart';
 import 'app_provider.dart';
+import 'common/widgets/banner_ad_widget.dart';
 import 'common/widgets/no_record_found_widget.dart';
 import 'models/mortgage_loan_model.dart';
 
@@ -281,6 +282,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+        bottomNavigationBar: BannerAdWidget(),
+
       ),
     );
   }

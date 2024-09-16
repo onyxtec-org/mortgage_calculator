@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:mortgage_calculator/ViewModels/OnBoardingViewModel.dart';
 import 'package:mortgage_calculator/common/constants/icons_constant.dart';
 import 'package:mortgage_calculator/common/constants/my_style.dart';
-import 'package:mortgage_calculator/common/widgets/banner_ad_widget.dart';
 import 'package:mortgage_calculator/common/widgets/elevated_button.dart';
 import 'package:mortgage_calculator/common/widgets/text_view.dart';
 import 'package:mortgage_calculator/home_screen.dart';
@@ -143,7 +142,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ],
               ),
             ),
-            bottomNavigationBar: Container(child: BannerAdWidget(),),
           ),
         );
       }),

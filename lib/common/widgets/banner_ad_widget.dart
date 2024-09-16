@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class BannerAdWidget extends StatefulWidget {
@@ -10,11 +11,11 @@ class BannerAdWidget extends StatefulWidget {
 
 class _BannerAdWidgetState extends State<BannerAdWidget> {
   BannerAd? _bannerAd;
-  final String adUnitId = Platform.isAndroid
+  final String? adUnitId = Platform.isAndroid
       // Use this ad unit on Android...
-      ? 'ca-app-pub-3940256099942544/6300978111'
+      ? dotenv.env['ANDROID_AD_UNIT_ID']
       // ... or this one on iOS.
-      : 'ca-app-pub-3940256099942544/2934735716';
+      : dotenv.env['iOS_AD_UNIT_ID'];
 
   @override
   void initState() {
@@ -24,7 +25,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   void _loadBannerAd() {
     BannerAd(
-      adUnitId: adUnitId, // Replace with your ad unit ID
+      adUnitId: adUnitId ?? '', // Replace with your ad unit ID
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(

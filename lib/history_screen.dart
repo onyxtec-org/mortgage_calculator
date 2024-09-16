@@ -11,6 +11,7 @@ import 'common/constants/icons_constant.dart';
 import 'common/constants/my_style.dart';
 import 'common/utils/utils.dart';
 import 'common/widgets/background_container.dart';
+import 'common/widgets/banner_ad_widget.dart';
 import 'common/widgets/elevated_button.dart';
 import 'common/widgets/navigation_bar.dart';
 import 'common/widgets/icon_text_view.dart';
@@ -206,6 +207,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ],
           ),
         ),
+        bottomNavigationBar: BannerAdWidget(),
       ),
     );
   }
