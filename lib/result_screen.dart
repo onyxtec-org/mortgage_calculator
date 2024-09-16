@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'common/constants/constants.dart';
 import 'common/constants/icons_constant.dart';
 import 'common/constants/my_style.dart';
+import 'common/widgets/banner_ad_widget.dart';
 import 'common/widgets/elevated_button.dart';
 import 'common/widgets/navigation_bar.dart';
 import 'managers/result.dart';
@@ -332,6 +333,7 @@ class _ResultScreenState extends State<ResultScreen> {
             ],
           ),
         ),
+        bottomNavigationBar: BannerAdWidget(),
       ),
     );
   }
