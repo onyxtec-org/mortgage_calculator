@@ -78,21 +78,21 @@ class TextInputFieldWidget extends StatelessWidget {
               : null,
           fillColor: Colors.white,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(color: MyStyle.lightGray),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(color: MyStyle.primaryColor),
           ),
           errorBorder: OutlineInputBorder(
             // Border style for errors
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(color: Colors.red), // Customize error border color
           ),
           focusedErrorBorder: OutlineInputBorder(
             // Border style for focused errors
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(color: Colors.red), // Customize focused error border color
           ),
         ),

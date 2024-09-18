@@ -60,6 +60,14 @@ class MortgageLoanManager {
     return (downPayment / homePrice) * 100;
   }
 
+  static double calculateDownPaymentValue(double homePrice, double percentage) {
+    if (percentage < 0 || percentage > 100) {
+      // Handle invalid percentage
+      throw ArgumentError('Percentage must be between 0 and 100.');
+    }
+    return (percentage / 100) * homePrice;
+  }
+
   // Calculate the total monthly payment including mortgage, taxes, insurance, and fees
   static Result calculateTotalMonthlyPayment({
     required double homePrice,

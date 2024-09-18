@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mortgage_calculator/common/constants/icons_constant.dart';
 import 'package:mortgage_calculator/common/constants/my_style.dart';
 import 'package:mortgage_calculator/common/widgets/elevated_button.dart';
+import 'package:mortgage_calculator/common/widgets/ink_well_widget.dart';
 import 'package:mortgage_calculator/common/widgets/navigation_bar.dart';
 import 'package:mortgage_calculator/common/widgets/icon_text_view.dart';
 import 'package:mortgage_calculator/common/widgets/text_input_container.dart';
 import 'package:mortgage_calculator/common/widgets/text_input_field_widget.dart';
+import 'package:mortgage_calculator/common/widgets/text_view.dart';
 import 'package:mortgage_calculator/managers/mortgage_loan_manager.dart';
 import 'package:mortgage_calculator/models/mortgage_loan_model.dart';
 import 'package:mortgage_calculator/result_screen.dart';
@@ -13,6 +15,7 @@ import 'package:super_tooltip/super_tooltip.dart';
 
 import 'common/constants/constants.dart';
 import 'common/widgets/alert_dialog.dart';
+import 'common/widgets/selecteable_text_widget.dart';
 
 class CalculatorFormScreen extends StatefulWidget {
   const CalculatorFormScreen({super.key});
@@ -35,7 +38,6 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
   final TextEditingController _titleTextFieldController = TextEditingController();
   final TextEditingController _homePriceTextFieldController = TextEditingController();
   final TextEditingController _downPaymentTextFieldController = TextEditingController();
-  final TextEditingController _downPaymentPercentTextFieldController = TextEditingController();
   final TextEditingController _loanTermTextFieldController = TextEditingController();
   final TextEditingController _interestRateTextFieldController = TextEditingController();
   final TextEditingController _propertyTaxTextFieldController = TextEditingController();
@@ -45,7 +47,12 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
 
   MortgageLoanModel? model;
 
-  double? homePrice, downPayment, loanToValue;
+  double? homePrice, downPayment;
+  var isDPPercentageSelected = true;
+  var isLoanTermYearSelected = true;
+  var isPropertyTaxPercentageSelected = true;
+  var isPMIPercentageSelected = true;
+  var isHOwnerPercentageSelected = true;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +79,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                       topLeft: Radius.circular(MyStyle.twentyFour),
                       topRight: Radius.circular(MyStyle.twentyFour),
                     ),
-                    color: MyStyle.backgroundColor,
+                    color: MyStyle.whiteColor,
                   ),
                   child: SingleChildScrollView(
                     child: Column(
@@ -127,7 +134,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                               if (parsedValue != null && parsedValue > 0) {
                                 homePrice = parsedValue;
                                 _homePriceError = null;
-                                calculateLoanToValue();
+                                // calculateLoanToValue();
                               } else {
                                 _homePriceError = value.isEmpty ? 'Please enter home price' : 'Home price must be positive';
                               }
@@ -162,19 +169,19 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
+                              flex: 3,
                               child: TextInputFieldWidget(
                                 controller: _downPaymentTextFieldController,
                                 inputType: TextInputType.number,
                                 inputAction: TextInputAction.next,
                                 errorText: _downPaymentError,
-                                suffixText: '\$',
                                 onChanged: (value) {
                                   setState(() {
                                     double? parsedValue = double.tryParse(value);
                                     if (parsedValue != null && parsedValue > 0) {
                                       downPayment = parsedValue;
                                       _downPaymentError = null;
-                                      calculateLoanToValue();
+                                      // calculateLoanToValue();
                                     } else {
                                       _downPaymentError = value.isEmpty ? 'Please enter down payment' : 'Down payment must be positive';
                                     }
@@ -184,15 +191,55 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                             ),
                             const SizedBox(width: 10),
                             Expanded(
+                              flex: 1,
                               child: TextInputContainer(
                                 child: Row(
                                   children: [
                                     Expanded(
-                                        child: IconTextView(
-                                            text: loanToValue == null ? '' : loanToValue!.toStringAsFixed(2),
-                                            color: MyStyle.primaryColor,
-                                            fontSize: MyStyle.fourteen)),
-                                    const IconTextView(text: '%', color: MyStyle.grayColor, fontSize: MyStyle.fourteen),
+                                      child: InkWellWidget(
+                                        onTap: () {
+                                          setState(() {
+                                            isDPPercentageSelected = true;
+                                            calculateLoanToValue();
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: isDPPercentageSelected
+                                                ? MyStyle.lightGray // Dark Gray for selected
+                                                : Colors.transparent, // Transparent for unselected
+                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+                                          ),
+                                          child: const TextView(
+                                            text: '%',
+                                            alignment: Alignment.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: InkWellWidget(
+                                        onTap: () {
+                                          setState(() {
+                                            isDPPercentageSelected = false;
+                                            calculateLoanToValue();
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: !isDPPercentageSelected
+                                                ? MyStyle.lightGray // Dark Gray for selected
+                                                : Colors.transparent, // Transparent for unselected
+                                            borderRadius:
+                                                BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
+                                          ),
+                                          child: const TextView(
+                                            text: '\$',
+                                            alignment: Alignment.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -209,22 +256,68 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                           onTapIcon: () {},
                         ),
                         const SizedBox(height: MyStyle.four),
-                        TextInputFieldWidget(
-                          controller: _loanTermTextFieldController,
-                          inputType: TextInputType.number,
-                          inputAction: TextInputAction.next,
-                          errorText: _loanTermError,
-                          suffixText: 'years',
-                          onChanged: (value) {
-                            setState(() {
-                              int? parsedValue = int.tryParse(value);
-                              if (parsedValue != null && parsedValue > 0) {
-                                _loanTermError = null;
-                              } else {
-                                _loanTermError = value.isEmpty ? 'Please enter loan term' : 'Loan term must be positive';
-                              }
-                            });
-                          },
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                children: [
+                                  TextInputFieldWidget(
+                                    controller: _loanTermTextFieldController,
+                                    inputType: TextInputType.number,
+                                    inputAction: TextInputAction.next,
+                                    errorText: _loanTermError,
+                                    suffixText: 'years',
+                                    onChanged: (value) {
+                                      setState(() {
+                                        int? parsedValue = int.tryParse(value);
+                                        if (parsedValue != null && parsedValue > 0) {
+                                          _loanTermError = null;
+                                        } else {
+                                          _loanTermError = value.isEmpty ? 'Please enter loan term' : 'Loan term must be positive';
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: MyStyle.ten),
+                            Expanded(
+                              flex: 1,
+                              child: TextInputContainer(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: SelectableTextWidget(
+                                        text: 'Yr',
+                                        selectedColor: isLoanTermYearSelected ? MyStyle.lightGray : Colors.transparent,
+                                        isLeftRadius: true,
+                                        onTap: () {
+                                          setState(() {
+                                            isLoanTermYearSelected = true;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: SelectableTextWidget(
+                                        text: 'Mo',
+                                        selectedColor: !isLoanTermYearSelected ? MyStyle.lightGray : Colors.transparent,
+                                        onTap: () {
+                                          setState(() {
+                                            isLoanTermYearSelected = false;
+                                          });
+                                        },
+                                        isLeftRadius: false,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
                         ),
 
                         /* Interest Rate view */
@@ -254,19 +347,20 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                           },
                         ),
 
-                        /* Property tax and PMI view */
+                        /* Property tax */
+                        const IconTextView(
+                          text: Constants.propertyTax,
+                          color: MyStyle.primaryColor,
+                          fontSize: MyStyle.fourteen,
+                        ),
+                        const SizedBox(height: MyStyle.four),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
+                              flex: 3,
                               child: Column(
                                 children: [
-                                  const IconTextView(
-                                    text: Constants.propertyTax,
-                                    color: MyStyle.primaryColor,
-                                    fontSize: MyStyle.fourteen,
-                                  ),
-                                  const SizedBox(height: MyStyle.four),
                                   TextInputFieldWidget(
                                     controller: _propertyTaxTextFieldController,
                                     inputType: TextInputType.number,
@@ -289,14 +383,55 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                             ),
                             const SizedBox(width: MyStyle.ten),
                             Expanded(
+                              flex: 1,
+                              child: TextInputContainer(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: SelectableTextWidget(
+                                        text: '%',
+                                        selectedColor: isPropertyTaxPercentageSelected ? MyStyle.lightGray : Colors.transparent,
+                                        onTap: () {
+                                          setState(() {
+                                            isPropertyTaxPercentageSelected = true;
+                                          });
+                                        },
+                                        isLeftRadius: true,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: SelectableTextWidget(
+                                        text: '\$',
+                                        selectedColor: !isPropertyTaxPercentageSelected ? MyStyle.lightGray : Colors.transparent,
+                                        onTap: () {
+                                          setState(() {
+                                            isPropertyTaxPercentageSelected = false;
+                                          });
+                                        },
+                                        isLeftRadius: false,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+
+                        /// PIM/year view
+                        const IconTextView(
+                          text: '${Constants.pmi}/year',
+                          color: MyStyle.primaryColor,
+                          fontSize: MyStyle.fourteen,
+                        ),
+                        const SizedBox(height: MyStyle.four),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 3,
                               child: Column(
                                 children: [
-                                  const IconTextView(
-                                    text: Constants.pmi,
-                                    color: MyStyle.primaryColor,
-                                    fontSize: MyStyle.fourteen,
-                                  ),
-                                  const SizedBox(height: MyStyle.four),
                                   TextInputFieldWidget(
                                     controller: _pmiTextFieldController,
                                     inputType: TextInputType.number,
@@ -317,22 +452,57 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                                 ],
                               ),
                             ),
+                            const SizedBox(width: MyStyle.ten),
+                            Expanded(
+                              flex: 1,
+                              child: TextInputContainer(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: SelectableTextWidget(
+                                        text: '%',
+                                        selectedColor: isPMIPercentageSelected ? MyStyle.lightGray : Colors.transparent,
+                                        onTap: () {
+                                          setState(() {
+                                            isPMIPercentageSelected = true;
+                                          });
+                                        },
+                                        isLeftRadius: true,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: SelectableTextWidget(
+                                        text: '\$',
+                                        selectedColor: !isPMIPercentageSelected ? MyStyle.lightGray : Colors.transparent,
+                                        onTap: () {
+                                          setState(() {
+                                            isPMIPercentageSelected = false;
+                                          });
+                                        },
+                                        isLeftRadius: false,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
 
-                        /* Home owner insurance and HOA fees views */
+                        ///Home owner insurance
+                        const IconTextView(
+                          text: '${Constants.homeOwnerInsurance}/year',
+                          color: MyStyle.primaryColor,
+                          fontSize: MyStyle.fourteen,
+                        ),
+                        const SizedBox(height: MyStyle.four),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
+                              flex: 3,
                               child: Column(
                                 children: [
-                                  const IconTextView(
-                                    text: Constants.homeOwnerInsurance,
-                                    color: MyStyle.primaryColor,
-                                    fontSize: MyStyle.fourteen,
-                                  ),
-                                  const SizedBox(height: MyStyle.four),
                                   TextInputFieldWidget(
                                     controller: _homeOwnerInsTextFieldController,
                                     inputType: TextInputType.number,
@@ -358,10 +528,50 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
                             ),
                             const SizedBox(width: MyStyle.ten),
                             Expanded(
+                              flex: 1,
+                              child: TextInputContainer(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: SelectableTextWidget(
+                                        text: '%',
+                                        selectedColor: isHOwnerPercentageSelected ? MyStyle.lightGray : Colors.transparent,
+                                        onTap: () {
+                                          setState(() {
+                                            isHOwnerPercentageSelected = true;
+                                          });
+                                        },
+                                        isLeftRadius: true,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: SelectableTextWidget(
+                                        text: '\$',
+                                        selectedColor: !isHOwnerPercentageSelected ? MyStyle.lightGray : Colors.transparent,
+                                        onTap: () {
+                                          setState(() {
+                                            isHOwnerPercentageSelected = false;
+                                          });
+                                        },
+                                        isLeftRadius: false,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+
+                        ///HOA fees views
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
                               child: Column(
                                 children: [
                                   const IconTextView(
-                                    text: Constants.hoaFees,
+                                    text: '${Constants.hoaFees}/month',
                                     color: MyStyle.primaryColor,
                                     fontSize: MyStyle.fourteen,
                                   ),
@@ -509,8 +719,10 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
   void calculateLoanToValue() {
     if (homePrice != null && downPayment != null) {
       setState(() {
-        loanToValue = MortgageLoanManager.calculateDownPaymentPercentage(homePrice!, downPayment!);
-        _downPaymentPercentTextFieldController.text = loanToValue!.toStringAsFixed(2);
+        downPayment = isDPPercentageSelected
+            ? MortgageLoanManager.calculateDownPaymentPercentage(homePrice!, downPayment!)
+            : MortgageLoanManager.calculateDownPaymentValue(homePrice!, downPayment!);
+        _downPaymentTextFieldController.text = downPayment.toString();
       });
     }
   }
@@ -520,7 +732,6 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
     _titleTextFieldController.clear();
     _homePriceTextFieldController.clear();
     _downPaymentTextFieldController.clear();
-    _downPaymentPercentTextFieldController.clear();
     _loanTermTextFieldController.clear();
     _interestRateTextFieldController.clear();
     _propertyTaxTextFieldController.clear();

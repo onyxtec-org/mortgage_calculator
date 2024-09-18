@@ -11,7 +11,7 @@ class TextInputContainer extends StatefulWidget {
     super.key,
     required this.child,
     this.borderColor = MyStyle.lightGray,
-    this.fillColor = MyStyle.backgroundColor,
+    this.fillColor = MyStyle.whiteColor,
   });
 
   @override
@@ -24,11 +24,10 @@ class _TextInputContainerState extends State<TextInputContainer> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.symmetric(horizontal: MyStyle.ten),
       height: 50,
       decoration: BoxDecoration(
         color: widget.fillColor,
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(11.0),
         border: Border.all(
           color: widget.borderColor,
         ),
