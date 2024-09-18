@@ -9,7 +9,7 @@ class MortgageLoanModel {
   double propertyTax;
   double pmi;
   int loanTerm;
-  double homeOwnerInsurance;
+  double annualHomeOwnerInsurance;
   double interestRate;
   double hoaFees;
   double? monthlyMortgage;
@@ -25,7 +25,7 @@ class MortgageLoanModel {
     required this.propertyTax,
     required this.pmi,
     required this.loanTerm,
-    required this.homeOwnerInsurance,
+    required this.annualHomeOwnerInsurance,
     required this.interestRate,
     required this.hoaFees,
     this.monthlyMortgage,
@@ -42,7 +42,7 @@ class MortgageLoanModel {
         'propertyTax': propertyTax,
         'pmi': pmi, //Private Mortgage Insurance
         'loanTerm': loanTerm,
-        'homeOwnerInsurance': homeOwnerInsurance,
+        'homeOwnerInsurance': annualHomeOwnerInsurance,
         'interestRate': interestRate,
         'hoaFees': hoaFees,
         'monthlyMortgage': monthlyMortgage, //Principle & interest
@@ -61,7 +61,7 @@ class MortgageLoanModel {
       propertyTax: json['propertyTax'] as double,
       pmi: json['pmi'] as double,
       loanTerm: json['loanTerm'] as int,
-      homeOwnerInsurance: json['homeOwnerInsurance'] as double,
+      annualHomeOwnerInsurance: json['homeOwnerInsurance'] as double,
       interestRate: json['interestRate'] as double,
       hoaFees: json['hoaFees'] as double,
       monthlyMortgage: json['monthlyMortgage'] != null ? json['monthlyMortgage'] as double : null,

@@ -16,5 +16,6 @@ class Constants {
   static const String calculate = "Calculate";
   static const String resetFields = "Reset Fields";
   static const String result = "Result";
+  static const String detail = "Detail";
   static const String loanInformation = 'Loan Information';
 }

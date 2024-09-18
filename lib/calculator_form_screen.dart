@@ -476,7 +476,7 @@ class _CalculatorFormScreenState extends State<CalculatorFormScreen> {
         // in percent
         propertyTax: double.parse(_propertyTaxTextFieldController.text),
         pmi: double.parse(_pmiTextFieldController.text),
-        homeOwnerInsurance: double.parse(_homeOwnerInsTextFieldController.text),
+        annualHomeOwnerInsurance: double.parse(_homeOwnerInsTextFieldController.text),
         hoaFees: double.parse(_hoaFeesTextFieldController.text),
         title: _titleTextFieldController.text,
       );

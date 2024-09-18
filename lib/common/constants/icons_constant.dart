@@ -28,6 +28,7 @@ class IconsConstant {
   static const String icCamera = '${iconsBasePath}ic-camera.svg';
   static const String icPhone = '${iconsBasePath}ic-phone-num.svg';
   static const String icExclamation = '${iconsBasePath}ic-exclamation.svg';
+  static const String icDetail = '${iconsBasePath}ic-details.svg';
 
   static const String icAvatar = '${imagesBasePath}avatar.png';
   static const String icLogo = '${imagesBasePath}ic-logo.png';

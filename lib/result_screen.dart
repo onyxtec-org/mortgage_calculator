@@ -5,6 +5,7 @@ import 'package:mortgage_calculator/common/widgets/alert_dialog.dart';
 import 'package:mortgage_calculator/common/widgets/background_container.dart';
 import 'package:mortgage_calculator/common/widgets/icon_text_view.dart';
 import 'package:mortgage_calculator/common/widgets/text_view.dart';
+import 'package:mortgage_calculator/details_screen.dart';
 import 'package:mortgage_calculator/local_db/mortgage_db_manager.dart';
 import 'package:mortgage_calculator/managers/mortgage_loan_manager.dart';
 import 'package:mortgage_calculator/models/mortgage_loan_model.dart';
@@ -55,14 +56,14 @@ class _ResultScreenState extends State<ResultScreen> {
           loanTermYears: mortgageData!.loanTerm,
           annualInterestRate: mortgageData!.interestRate,
           annualPropertyTax: mortgageData!.propertyTax,
-          annualHomeInsurance: mortgageData!.homeOwnerInsurance,
+          annualHomeInsurance: mortgageData!.annualHomeOwnerInsurance,
           pmiAmount: mortgageData!.pmi,
           hoaFees: mortgageData!.hoaFees);
       dataMap = {
         'Principle & interest': totalMonthlyPayment.principleAndInterest,
         'Property Tax': mortgageData!.propertyTax,
         'PMI': mortgageData!.pmi,
-        'Homeowner insurance': mortgageData!.homeOwnerInsurance,
+        'Homeowner insurance': mortgageData!.annualHomeOwnerInsurance,
         'HOA fees': mortgageData!.hoaFees
       };
       setState(() {});
@@ -84,15 +85,27 @@ class _ResultScreenState extends State<ResultScreen> {
                 iconsColor: MyStyle.whiteColor,
                 titleText: Constants.result,
                 titleColor: MyStyle.whiteColor,
-                icons: widget.isHistory ? [IconsConstant.icDelete] : [],
+                icons: widget.isHistory ? [IconsConstant.icDelete, IconsConstant.icDetail] : [],
                 onIconTap: (index) {
-                  showWarning((callback) async {
-                    if (callback) {
-                      await MortgageDbManager.deleteMortgage(mortgageData!);
-                      appProvider!.updateProvider(updateStatus: true);
-                      Navigator.of(context).pop();
-                    }
-                  });
+                  if (index == 0) {
+                    showWarning((callback) async {
+                      if (callback) {
+                        await MortgageDbManager.deleteMortgage(mortgageData!);
+                        appProvider!.updateProvider(updateStatus: true);
+                        Navigator.of(context).pop();
+                      }
+                    });
+                  }
+                  if (index == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => DetailsScreen(
+                          mortgageLoanModel: mortgageData,
+                        ),
+                      ),
+                    );
+                  }
                 },
               ),
               const SizedBox(height: MyStyle.twenty),
@@ -208,7 +221,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                                   fontColor: MyStyle.grayColor,
                                                   fontSize: MyStyle.twelve),
                                               TextView(
-                                                text: '\$${widget.mortgageLoanModel?.homeOwnerInsurance}',
+                                                text: '\$${widget.mortgageLoanModel?.annualHomeOwnerInsurance}',
                                                 fontWeight: FontWeight.bold,
                                               )
                                             ],
