@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mortgage_calculator/managers/mortgage_detail_model.dart';
 
 import 'common/constants/constants.dart';
 import 'common/constants/icons_constant.dart';
@@ -6,6 +7,7 @@ import 'common/constants/my_style.dart';
 import 'common/widgets/background_container.dart';
 import 'common/widgets/navigation_bar.dart';
 import 'common/widgets/text_view.dart';
+import 'managers/mortgage_loan_manager.dart';
 import 'models/mortgage_loan_model.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -17,325 +19,199 @@ class DetailsScreen extends StatefulWidget {
   State<DetailsScreen> createState() => _DetailsScreenState();
 }
 
-class _DetailsScreenState extends State<DetailsScreen> {
+class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProviderStateMixin {
   MortgageLoanModel? mortgageData;
+  List<MortgageDetailModel> breakdown = [];
+  late TabController _tabController;
+  int seletecdType = 0;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this); // 2 tabs
     mortgageData = widget.mortgageLoanModel;
+    _loadMonthlyData();
+  }
+
+  void _loadMonthlyData() {
+    // Initial data load
+    breakdown = MortgageLoanManager.createMonthlyBreakdown(mortgageData: mortgageData!);
+
+    // Add a listener to detect tab changes
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        setState(() {
+          // Clear and update the breakdown list based on the selected tab
+          if (_tabController.index == 0) {
+            breakdown = MortgageLoanManager.createMonthlyBreakdown(mortgageData: mortgageData!);
+          } else {
+            breakdown = MortgageLoanManager.createAnnualBreakdown(mortgageData: mortgageData!);
+          }
+          seletecdType = _tabController.index;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      body: Container(
-        color: MyStyle.primaryColor,
-        width: double.infinity,
-        child: Column(
-          children: [
-            NavBar(
-              backIcon: IconsConstant.icBackArrow,
-              iconsColor: MyStyle.whiteColor,
-              titleText: Constants.result,
-              titleColor: MyStyle.whiteColor,
-            ),
-            const SizedBox(height: MyStyle.twenty),
-            Expanded(
-              child: Container(
-                color: MyStyle.backgroundColor,
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: MyStyle.twenty),
-                          TextView(
-                            text: mortgageData!.title,
-                            fontWeight: FontWeight.bold,
-                            maxLines: null,
-                            textAlign: TextAlign.start,
-                          ),
-                          const SizedBox(height: MyStyle.twenty),
-                          BackgroundContainer(
-                            color: MyStyle.whiteColor,
-                            borderRadius: MyStyle.twelve,
-                            borderColor: MyStyle.whiteColor,
-                            isBorder: false,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: MyStyle.twenty, horizontal: MyStyle.ten),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.homePrice, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.homePrice}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.propertyTax, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.propertyTax}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: MyStyle.ten),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.downPayment, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.downPayment}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(text: Constants.pmi, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.pmi}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: MyStyle.ten),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.loanTerm, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '${mortgageData?.loanTerm} years',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.homeOwnerInsurance, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.homeOwnerInsurance}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: MyStyle.ten),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.interestRate, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '${mortgageData?.interestRate}%',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(text: Constants.hoaFees, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.hoaFees}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: MyStyle.twenty),
-                        ],
-                      ),
+      child: Scaffold(
+        body: Container(
+          color: MyStyle.primaryColor,
+          width: double.infinity,
+          child: Column(
+            children: [
+              NavBar(
+                backIcon: IconsConstant.icBackArrow,
+                iconsColor: MyStyle.whiteColor,
+                titleText: Constants.detail,
+                titleColor: MyStyle.whiteColor,
+              ),
+              const SizedBox(height: MyStyle.twenty),
+              Container(
+                color: MyStyle.whiteColor,
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: TabBar(
+                  controller: _tabController,
+                  indicatorColor: MyStyle.primaryColor,
+                  labelColor: MyStyle.primaryColor,
+                  unselectedLabelColor: MyStyle.grayColor,
+                  dividerColor: Colors.transparent,
+                  tabs: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('Monthly'),
                     ),
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: MyStyle.twenty),
-                          TextView(
-                            text: mortgageData!.title,
-                            fontWeight: FontWeight.bold,
-                            maxLines: null,
-                            textAlign: TextAlign.start,
-                          ),
-                          const SizedBox(height: MyStyle.twenty),
-                          BackgroundContainer(
-                            color: MyStyle.whiteColor,
-                            borderRadius: MyStyle.twelve,
-                            borderColor: MyStyle.whiteColor,
-                            isBorder: false,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: MyStyle.twenty, horizontal: MyStyle.ten),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.homePrice, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.homePrice}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.propertyTax, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.propertyTax}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: MyStyle.ten),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.downPayment, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.downPayment}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(text: Constants.pmi, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.pmi}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: MyStyle.ten),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.loanTerm, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '${mortgageData?.loanTerm} years',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.homeOwnerInsurance, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.homeOwnerInsurance}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: MyStyle.ten),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(
-                                                text: Constants.interestRate, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '${mortgageData?.interestRate}%',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            const TextView(text: Constants.hoaFees, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
-                                            TextView(
-                                              text: '\$${mortgageData?.hoaFees}',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: MyStyle.twenty),
-                        ],
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('Yearly'),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Container(
+                color: MyStyle.primaryLightColor,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextView(
+                          text: seletecdType == 0 ? 'Month' : 'Year',
+                          fontColor: MyStyle.whiteColor,
+                          fontSize: MyStyle.twelve,
+                          alignment: Alignment.center,
+                        ),
+                      ),
+                      Expanded(
+                        child: TextView(
+                          text: 'Mortgage',
+                          fontColor: MyStyle.whiteColor,
+                          fontSize: MyStyle.twelve,
+                          alignment: Alignment.center,
+                        ),
+                      ),
+                      Expanded(
+                        child: TextView(
+                          text: 'Principle',
+                          fontColor: MyStyle.whiteColor,
+                          fontSize: MyStyle.twelve,
+                          alignment: Alignment.center,
+                        ),
+                      ),
+                      Expanded(
+                        child: TextView(
+                          text: 'Interest',
+                          fontColor: MyStyle.whiteColor,
+                          fontSize: MyStyle.twelve,
+                          alignment: Alignment.center,
+                        ),
+                      ),
+                      Expanded(
+                        child: TextView(
+                          text: 'Balance',
+                          fontColor: MyStyle.whiteColor,
+                          fontSize: MyStyle.twelve,
+                          alignment: Alignment.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  color: MyStyle.whiteColor,
+                  child: CustomScrollView(
+                    slivers: [
+                      // Update the list based on the selected tab
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          childCount: breakdown.length,
+                          (context, index) {
+                            final data = breakdown[index];
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextView(
+                                          text: data.term,
+                                          fontSize: MyStyle.twelve,
+                                          alignment: Alignment.center,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextView(
+                                          text: data.monthlyMortgage.toStringAsFixed(2),
+                                          fontSize: MyStyle.twelve,
+                                          alignment: Alignment.center,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextView(
+                                          text: data.principalPaid.toStringAsFixed(2),
+                                          fontSize: MyStyle.twelve,
+                                          alignment: Alignment.center,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextView(
+                                          text: data.monthlyInterest.toStringAsFixed(2),
+                                          fontSize: MyStyle.twelve,
+                                          alignment: Alignment.center,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextView(
+                                          text: data.remainingBalance.toStringAsFixed(2),
+                                          fontSize: MyStyle.twelve,
+                                          alignment: Alignment.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  color: MyStyle.lightGray,
+                                  height: 1,
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

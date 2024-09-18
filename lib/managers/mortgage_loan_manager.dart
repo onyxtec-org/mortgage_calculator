@@ -1,6 +1,9 @@
 import 'dart:math';
 
+import 'package:intl/intl.dart';
 import 'package:mortgage_calculator/managers/calculation.dart';
+import 'package:mortgage_calculator/managers/mortgage_detail_model.dart';
+import 'package:mortgage_calculator/models/mortgage_loan_model.dart';
 
 import 'result.dart';
 
@@ -65,7 +68,7 @@ class MortgageLoanManager {
     required int loanTermYears,
     required double annualInterestRate,
     required double annualPropertyTax, // This is now the total annual property tax amount
-    required double monthlyHomeOwnerInsurance,
+    required double annualHomeInsurance,
     required double pmiAmount, // PMI amount in dollars
     required double hoaFees,
   }) {
@@ -76,7 +79,7 @@ class MortgageLoanManager {
     double monthlyPropertyTax = calculateMonthlyPropertyTax(annualPropertyTax);
     double pmiRate = convertPMIAmountToPercentage(pmiAmount, loanAmount); // Convert PMI amount to percentage
     double monthlyPMI = calculateMonthlyPMI(loanAmount, pmiRate);
-    double monthlyHOInsurance = monthlyHomeOwnerInsurance;
+    double monthlyHOInsurance = annualHomeInsurance / 12;
 
     // Log values for debugging
     print('loanAmount: $loanAmount');
@@ -107,36 +110,146 @@ class MortgageLoanManager {
     return result;
   }
 
-  // Function to calculate annual payments
-  static void calculateAnnualPayments({
-    required double monthlyMortgage,
-    required double monthlyPropertyTax,
-    required double monthlyPMI,
-    required double monthlyHOInsurance,
-    required double hoaFees, // Assuming HOA fees are monthly as well
+  // Function to create a monthly breakdown
+  static List<MortgageDetailModel> createMonthlyBreakdown({
+    required MortgageLoanModel mortgageData,
   }) {
-    double annualMortgage = monthlyMortgage * 12;
-    double annualPropertyTax = monthlyPropertyTax * 12;
-    double annualPMI = monthlyPMI * 12;
-    double annualHomeInsurance = monthlyHOInsurance * 12;
-    double annualHOAFees = hoaFees * 12;
+    double loanAmount = calculateLoanAmount(mortgageData.homePrice, mortgageData.downPayment);
+    double monthlyInterestRate = calculateMonthlyInterestRate(mortgageData.interestRate);
+    int numberOfPayments = calculateNumberOfPayments(mortgageData.loanTerm);
+    double monthlyMortgage = calculateMonthlyMortgagePayment(loanAmount, monthlyInterestRate, numberOfPayments);
+    double monthlyPropertyTax = calculateMonthlyPropertyTax(mortgageData.propertyTax);
+    double pmiRate = (mortgageData.pmi / loanAmount) * 100;
+    double monthlyPMI = calculateMonthlyPMI(loanAmount, pmiRate);
+    double monthlyHomeInsurance = mortgageData.annualHomeOwnerInsurance / 12;
 
-    // Print values for debugging
-    print('Annual Mortgage Payment: \$${annualMortgage.toStringAsFixed(2)}');
-    print('Annual Property Tax: \$${annualPropertyTax.toStringAsFixed(2)}');
-    print('Annual PMI: \$${annualPMI.toStringAsFixed(2)}');
-    print('Annual Homeowner\'s Insurance: \$${annualHomeInsurance.toStringAsFixed(2)}');
-    print('Annual HOA Fees: \$${annualHOAFees.toStringAsFixed(2)}');
+    // Initialize remaining loan balance
+    double remainingBalance = loanAmount;
 
-    final calculation = Calculation(
-      termType: 1,
-      mortgage: annualMortgage,
-      propertyTax: annualPropertyTax,
-      PMI: annualPMI,
-      houseOwnerInsurance: annualHomeInsurance,
-      haoFees: annualHOAFees,
-    );
-    double totalAnnualPayment = annualMortgage + annualPropertyTax + annualPMI + annualHomeInsurance + annualHOAFees;
-    print('Total Annual Payment: \$${totalAnnualPayment.toStringAsFixed(2)}');
+    List<MortgageDetailModel> monthlyBreakdown = [];
+
+    // Get the current date
+    DateTime currentDate = DateTime.now();
+
+    for (int month = 0; month <= numberOfPayments; month++) {
+      // Calculate interest for the current month
+      double monthlyInterest = remainingBalance * monthlyInterestRate;
+
+      // Calculate principal paid for the current month
+      double principalPaid = monthlyMortgage - monthlyInterest;
+
+      // Subtract the principal from the remaining balance
+      remainingBalance -= principalPaid;
+
+      // Calculate the actual month and year for this payment
+      DateTime paymentDate = DateTime(currentDate.year, currentDate.month + month);
+      String monthName = DateFormat.yMMM().format(paymentDate); // Format to show month and year
+
+      MortgageDetailModel monthlyData = MortgageDetailModel(
+        type: 0,
+        term: monthName,
+        monthlyMortgage: monthlyMortgage,
+        principalPaid: principalPaid,
+        monthlyInterest: monthlyInterest,
+        remainingBalance: remainingBalance,
+      );
+      monthlyBreakdown.add(monthlyData);
+      // Add the monthly breakdown to the list
+      /* monthlyBreakdown.add({
+        'Month': month,
+        'Monthly Mortgage': monthlyMortgage,
+        'Principal Paid': principalPaid,
+        'Interest Paid': monthlyInterest,
+        'Remaining Balance': remainingBalance,
+        'Property Tax': monthlyPropertyTax,
+        'PMI': monthlyPMI,
+        'Home Insurance': monthlyHomeInsurance,
+        'HOA Fees': hoaFees,
+        'Total Monthly Payment': monthlyMortgage + monthlyPropertyTax + monthlyPMI + monthlyHomeInsurance + hoaFees,
+      });*/
+    }
+
+    return monthlyBreakdown;
+  }
+
+  // Function to calculate annual payments
+  static List<MortgageDetailModel> createAnnualBreakdown({
+    required MortgageLoanModel mortgageData,
+  }) {
+    double loanAmount = calculateLoanAmount(mortgageData.homePrice, mortgageData.downPayment);
+    double monthlyInterestRate = calculateMonthlyInterestRate(mortgageData.interestRate);
+    int numberOfPayments = calculateNumberOfPayments(mortgageData.loanTerm);
+    double monthlyMortgage = calculateMonthlyMortgagePayment(loanAmount, monthlyInterestRate, numberOfPayments);
+    double monthlyPropertyTax = calculateMonthlyPropertyTax(mortgageData.propertyTax);
+    double pmiRate = (mortgageData.pmi / loanAmount) * 100;
+    double monthlyPMI = calculateMonthlyPMI(loanAmount, pmiRate);
+    double monthlyHomeInsurance = mortgageData.annualHomeOwnerInsurance / 12;
+
+    // Initialize remaining loan balance
+    double remainingBalance = loanAmount;
+
+    // Initialize the annual breakdown list
+    List<MortgageDetailModel> annualBreakdown = [];
+
+    // Get the current year
+    int currentYear = DateTime.now().year;
+
+    // Summarize data year by year
+    for (int year = 0; year < mortgageData.loanTerm; year++) {
+      // Initialize totals for the year
+      double totalMortgage = 0;
+      double totalPrincipalPaid = 0;
+      double totalInterestPaid = 0;
+      double totalPropertyTax = 0;
+      double totalPMI = 0;
+      double totalHomeInsurance = 0;
+      double totalHOAFees = 0;
+
+      // Loop through 12 months of the year
+      for (int month = 0; month < 12; month++) {
+        if (year * 12 + month > numberOfPayments) break; // Stop if we've reached the end of payments
+
+        // Calculate interest and principal for the current month
+        double monthlyInterest = remainingBalance * monthlyInterestRate;
+        double principalPaid = monthlyMortgage - monthlyInterest;
+
+        // Subtract the principal from the remaining balance
+        remainingBalance -= principalPaid;
+
+        // Add the monthly totals to the yearly totals
+        totalMortgage += monthlyMortgage;
+        totalPrincipalPaid += principalPaid;
+        totalInterestPaid += monthlyInterest;
+        totalPropertyTax += monthlyPropertyTax;
+        totalPMI += monthlyPMI;
+        totalHomeInsurance += monthlyHomeInsurance;
+        totalHOAFees += mortgageData.hoaFees;
+      }
+
+      MortgageDetailModel monthlyData = MortgageDetailModel(
+        type: 1,
+        term: (currentYear + year).toString(),
+        monthlyMortgage: totalMortgage,
+        principalPaid: totalPrincipalPaid,
+        monthlyInterest: totalInterestPaid,
+        remainingBalance: remainingBalance,
+      );
+      annualBreakdown.add(monthlyData);
+      // Add the yearly breakdown to the list
+/*      annualBreakdown.add({
+        'Year': year,
+        'Total Mortgage Payment': totalMortgage,
+        'Total Principal Paid': totalPrincipalPaid,
+        'Total Interest Paid': totalInterestPaid,
+        'Remaining Balance': remainingBalance,
+        'Total Property Tax': totalPropertyTax,
+        'Total PMI': totalPMI,
+        'Total Home Insurance': totalHomeInsurance,
+        'Total HOA Fees': totalHOAFees,
+        'Total Annual Payment': totalMortgage + totalPropertyTax + totalPMI + totalHomeInsurance + totalHOAFees,
+      });*/
+    }
+
+    return annualBreakdown;
   }
 }

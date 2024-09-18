@@ -56,14 +56,14 @@ class _ResultScreenState extends State<ResultScreen> {
           loanTermYears: mortgageData!.loanTerm,
           annualInterestRate: mortgageData!.interestRate,
           annualPropertyTax: mortgageData!.propertyTax,
-          monthlyHomeOwnerInsurance: mortgageData!.homeOwnerInsurance,
+          annualHomeInsurance: mortgageData!.annualHomeOwnerInsurance,
           pmiAmount: mortgageData!.pmi,
           hoaFees: mortgageData!.hoaFees);
       dataMap = {
         'Principle & interest': totalMonthlyPayment.principleAndInterest,
         'Property Tax': mortgageData!.propertyTax,
         'PMI': mortgageData!.pmi,
-        'Homeowner insurance': mortgageData!.homeOwnerInsurance,
+        'Homeowner insurance': mortgageData!.annualHomeOwnerInsurance,
         'HOA fees': mortgageData!.hoaFees
       };
       setState(() {});
@@ -85,7 +85,7 @@ class _ResultScreenState extends State<ResultScreen> {
                 iconsColor: MyStyle.whiteColor,
                 titleText: Constants.result,
                 titleColor: MyStyle.whiteColor,
-                icons: widget.isHistory ? [IconsConstant.icDelete, IconsConstant.icHome] : [],
+                icons: widget.isHistory ? [IconsConstant.icDelete, IconsConstant.icDetail] : [],
                 onIconTap: (index) {
                   if (index == 0) {
                     showWarning((callback) async {
@@ -98,11 +98,13 @@ class _ResultScreenState extends State<ResultScreen> {
                   }
                   if (index == 1) {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => DetailsScreen(
-                                  mortgageLoanModel: mortgageData,
-                                )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => DetailsScreen(
+                          mortgageLoanModel: mortgageData,
+                        ),
+                      ),
+                    );
                   }
                 },
               ),
@@ -219,7 +221,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                                   fontColor: MyStyle.grayColor,
                                                   fontSize: MyStyle.twelve),
                                               TextView(
-                                                text: '\$${widget.mortgageLoanModel?.homeOwnerInsurance}',
+                                                text: '\$${widget.mortgageLoanModel?.annualHomeOwnerInsurance}',
                                                 fontWeight: FontWeight.bold,
                                               )
                                             ],
