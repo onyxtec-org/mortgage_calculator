@@ -66,8 +66,8 @@ class TextInputFieldWidget extends StatelessWidget {
                       child: Text(
                         suffixText!,
                         style: TextStyle(
-                          color: MyStyle.grayColor,
-                          fontSize: MediaQuery.of(context).size.width < 600 ? MyStyle.fourteen : MyStyle.eighteen,
+                          color: MyStyle.primaryColor,
+                          fontSize: MediaQuery.of(context).size.width < 600 ? MyStyle.sixteen : MyStyle.eighteen,
                         ),
                         overflow: TextOverflow.ellipsis, // Ensure text doesn't overflow
                         maxLines: 1, // Limit to one line
@@ -78,21 +78,21 @@ class TextInputFieldWidget extends StatelessWidget {
               : null,
           fillColor: Colors.white,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(color: MyStyle.lightGray),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(color: MyStyle.primaryColor),
           ),
           errorBorder: OutlineInputBorder(
             // Border style for errors
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(color: Colors.red), // Customize error border color
           ),
           focusedErrorBorder: OutlineInputBorder(
             // Border style for focused errors
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(color: Colors.red), // Customize focused error border color
           ),
         ),

@@ -3,7 +3,7 @@ import 'package:path/path.dart';
 
 class DatabaseHelper {
   static const _databaseName = 'MortgageCalculator.db';
-  static const _databaseVersion = 1; // Increment the version number
+  static const _databaseVersion = 2; // Increment the version number
   static const mortgageLoanTable = 'MORTGAGE_LOAN_TABLE';
 
   static getDB() async {
@@ -12,7 +12,19 @@ class DatabaseHelper {
       path,
       version: _databaseVersion,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
+  }
+
+  static Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    print('Ole version: $oldVersion, New version: $newVersion}');
+    if (oldVersion < 2) {
+      // Add new column 'startedAt' if the database version is less than 2
+      await db.execute('''
+        ALTER TABLE $mortgageLoanTable
+        ADD COLUMN startedAt INTEGER
+      ''');
+    }
   }
 
   static Future _onCreate(Database db, int version) async {

@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:intl/intl.dart';
 import 'package:mortgage_calculator/managers/calculation.dart';
 import 'package:mortgage_calculator/managers/mortgage_detail_model.dart';
@@ -41,8 +40,8 @@ class MortgageLoanManager {
   }
 
   // Convert PMI amount to percentage
-  static double convertPMIAmountToPercentage(double pmiAmount, double loanAmount) {
-    return (pmiAmount / loanAmount) * 100;
+  static double convertPMIAmountToPercentage(double annualPMIAmount, double loanAmount) {
+    return (annualPMIAmount / loanAmount) * 100;
   }
 
   // Calculate the Loan-to-Value (LTV) ratio
@@ -60,6 +59,14 @@ class MortgageLoanManager {
     return (downPayment / homePrice) * 100;
   }
 
+  static double calculateDownPaymentValue(double homePrice, double percentage) {
+    if (percentage < 0 || percentage > 100) {
+      // Handle invalid percentage
+      throw ArgumentError('Percentage must be between 0 and 100.');
+    }
+    return (percentage / 100) * homePrice;
+  }
+
   // Calculate the total monthly payment including mortgage, taxes, insurance, and fees
   static Result calculateTotalMonthlyPayment({
     required double homePrice,
@@ -68,7 +75,7 @@ class MortgageLoanManager {
     required double annualInterestRate,
     required double annualPropertyTax,
     required double annualHomeInsurance,
-    required double pmiAmount,
+    required double annualPMIAmount,
     required double hoaFees,
   }) {
     double loanAmount = calculateLoanAmount(homePrice, downPayment);
@@ -76,7 +83,7 @@ class MortgageLoanManager {
     int numberOfPayments = calculateNumberOfPayments(loanTermYears);
     double monthlyMortgage = calculateMonthlyMortgagePayment(loanAmount, monthlyInterestRate, numberOfPayments);
     double monthlyPropertyTax = calculateMonthlyPropertyTax(annualPropertyTax);
-    double pmiRate = convertPMIAmountToPercentage(pmiAmount, loanAmount); // Convert PMI amount to percentage
+    double pmiRate = convertPMIAmountToPercentage(annualPMIAmount, loanAmount); // Convert PMI amount to percentage
     double monthlyPMI = calculateMonthlyPMI(loanAmount, pmiRate);
     double monthlyHOInsurance = annualHomeInsurance / 12;
 
@@ -91,8 +98,7 @@ class MortgageLoanManager {
       haoFees: hoaFees,
     );
 
-    var totalMonthlyPayment =
-        monthlyMortgage + monthlyPropertyTax + monthlyHOInsurance + hoaFees + monthlyPMI;
+    var totalMonthlyPayment = monthlyMortgage + monthlyPropertyTax + monthlyHOInsurance + hoaFees + monthlyPMI;
 
     Result result = Result(
       principleAndInterest: monthlyMortgage,

@@ -57,7 +57,7 @@ class _ResultScreenState extends State<ResultScreen> {
           annualInterestRate: mortgageData!.interestRate,
           annualPropertyTax: mortgageData!.propertyTax,
           annualHomeInsurance: mortgageData!.annualHomeOwnerInsurance,
-          pmiAmount: mortgageData!.pmi,
+          annualPMIAmount: mortgageData!.pmi,
           hoaFees: mortgageData!.hoaFees);
       dataMap = {
         'Principle & interest': totalMonthlyPayment.principleAndInterest,
@@ -150,7 +150,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                               const TextView(
                                                   text: Constants.homePrice, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                               TextView(
-                                                text: '\$${widget.mortgageLoanModel?.homePrice}',
+                                                text: Utils.formatCurrency(widget.mortgageLoanModel!.homePrice),
                                                 fontWeight: FontWeight.bold,
                                               )
                                             ],
@@ -162,7 +162,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                               const TextView(
                                                   text: Constants.propertyTax, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                               TextView(
-                                                text: '\$${widget.mortgageLoanModel?.propertyTax}',
+                                                text: widget.mortgageLoanModel == null
+                                                    ? ''
+                                                    : Utils.formatCurrency(widget.mortgageLoanModel!.propertyTax),
                                                 fontWeight: FontWeight.bold,
                                               )
                                             ],
@@ -179,7 +181,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                               const TextView(
                                                   text: Constants.downPayment, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                               TextView(
-                                                text: '\$${widget.mortgageLoanModel?.downPayment}',
+                                                text: widget.mortgageLoanModel == null
+                                                    ? ''
+                                                    : Utils.formatCurrency(widget.mortgageLoanModel!.downPayment),
                                                 fontWeight: FontWeight.bold,
                                               )
                                             ],
@@ -190,7 +194,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                             children: [
                                               const TextView(text: Constants.pmi, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                               TextView(
-                                                text: '\$${widget.mortgageLoanModel?.pmi}',
+                                                text: widget.mortgageLoanModel == null
+                                                    ? ''
+                                                    : Utils.formatCurrency(widget.mortgageLoanModel!.pmi),
                                                 fontWeight: FontWeight.bold,
                                               )
                                             ],
@@ -221,7 +227,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                                   fontColor: MyStyle.grayColor,
                                                   fontSize: MyStyle.twelve),
                                               TextView(
-                                                text: '\$${widget.mortgageLoanModel?.annualHomeOwnerInsurance}',
+                                                text: widget.mortgageLoanModel == null
+                                                    ? ''
+                                                    : Utils.formatCurrency(widget.mortgageLoanModel!.annualHomeOwnerInsurance),
                                                 fontWeight: FontWeight.bold,
                                               )
                                             ],
@@ -250,7 +258,9 @@ class _ResultScreenState extends State<ResultScreen> {
                                               const TextView(
                                                   text: Constants.hoaFees, fontColor: MyStyle.grayColor, fontSize: MyStyle.twelve),
                                               TextView(
-                                                text: '\$${widget.mortgageLoanModel?.hoaFees}',
+                                                text: widget.mortgageLoanModel == null
+                                                    ? ''
+                                                    : Utils.formatCurrency(widget.mortgageLoanModel!.hoaFees),
                                                 fontWeight: FontWeight.bold,
                                               )
                                             ],
@@ -304,7 +314,8 @@ class _ResultScreenState extends State<ResultScreen> {
                                     ),
                                     children: <TextSpan>[
                                       TextSpan(
-                                        text: '\$${totalMonthlyPayment.totalMonthlyPayment.toStringAsFixed(2)}',
+                                        text: Utils.formatCurrency(totalMonthlyPayment.totalMonthlyPayment), //'\$${totalMonthlyPayment
+                                        // .totalMonthlyPayment.toStringAsFixed(2)}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: MyStyle.sixteen,

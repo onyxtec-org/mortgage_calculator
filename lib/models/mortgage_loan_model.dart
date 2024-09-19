@@ -2,6 +2,7 @@ class MortgageLoanModel {
   final int? id;
   int? createdAt;
   int? updatedAt;
+  int? startedAt;
   String title;
   double homePrice;
   double downPayment;
@@ -18,6 +19,7 @@ class MortgageLoanModel {
     this.id,
     this.createdAt,
     this.updatedAt,
+    this.startedAt,
     required this.title,
     required this.homePrice,
     required this.downPayment,
@@ -36,6 +38,7 @@ class MortgageLoanModel {
         'id': id,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
+        'startedAt': startedAt,
         'title': title,
         'homePrice': homePrice,
         'downPayment': downPayment,
@@ -54,6 +57,7 @@ class MortgageLoanModel {
       id: json['id'] as int?,
       createdAt: json['createdAt'] as int?,
       updatedAt: json['updatedAt'] as int?,
+      startedAt: json['startedAt'] as int?,
       title: json['title'] as String,
       homePrice: json['homePrice'] as double,
       downPayment: json['downPayment'] as double,

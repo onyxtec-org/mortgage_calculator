@@ -4,6 +4,7 @@ import 'package:mortgage_calculator/managers/mortgage_detail_model.dart';
 import 'common/constants/constants.dart';
 import 'common/constants/icons_constant.dart';
 import 'common/constants/my_style.dart';
+import 'common/utils/utils.dart';
 import 'common/widgets/background_container.dart';
 import 'common/widgets/navigation_bar.dart';
 import 'common/widgets/text_view.dart';
@@ -166,28 +167,28 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
                                       ),
                                       Expanded(
                                         child: TextView(
-                                          text: data.monthlyMortgage.toStringAsFixed(2),
+                                          text: Utils.formatCurrency(data.monthlyMortgage),
                                           fontSize: MyStyle.twelve,
                                           alignment: Alignment.center,
                                         ),
                                       ),
                                       Expanded(
                                         child: TextView(
-                                          text: data.principalPaid.toStringAsFixed(2),
+                                          text: Utils.formatCurrency(data.principalPaid),
                                           fontSize: MyStyle.twelve,
                                           alignment: Alignment.center,
                                         ),
                                       ),
                                       Expanded(
                                         child: TextView(
-                                          text: data.monthlyInterest.toStringAsFixed(2),
+                                          text: Utils.formatCurrency(data.monthlyInterest),
                                           fontSize: MyStyle.twelve,
                                           alignment: Alignment.center,
                                         ),
                                       ),
                                       Expanded(
                                         child: TextView(
-                                          text: data.remainingBalance.toStringAsFixed(2),
+                                          text: Utils.formatCurrency(data.remainingBalance),
                                           fontSize: MyStyle.twelve,
                                           alignment: Alignment.center,
                                         ),

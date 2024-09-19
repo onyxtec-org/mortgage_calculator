@@ -211,11 +211,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       maxLines: 1,
                                                     ),
                                                     TextView(
-                                                      text: Utils.formatDate(mortgageData.createdAt!),
+                                                      text: Utils.formatTimeStampToDate(mortgageData.createdAt!),
                                                       fontColor: MyStyle.grayColor,
                                                       fontSize: MyStyle.twelve,
                                                       textAlign: TextAlign.start,
-                                                      alignment: Alignment.center,
                                                     ),
                                                     const SizedBox(height: MyStyle.fourteen),
                                                     TextView(
@@ -253,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   const SizedBox(height: MyStyle.fourteen),
                                                   TextView(
-                                                    text: '\$${mortgageData.homePrice}',
+                                                    text: Utils.formatCurrency(mortgageData.homePrice),
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                   const TextView(
