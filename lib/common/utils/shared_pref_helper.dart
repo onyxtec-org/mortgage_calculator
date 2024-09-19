@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/user_model.dart';
+
 
 class SharedPrefHelper {
   static void saveStringValues(String key, String? value) async {
@@ -52,7 +54,7 @@ class SharedPrefHelper {
 
   static const String _userKey = 'user';
 
-/*  static Future<void> saveUser(UserModel user) async {
+  static Future<void> saveUser(UserModel user) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_userKey, jsonEncode(user.toJson()));
   }
@@ -64,7 +66,7 @@ class SharedPrefHelper {
       return UserModel.fromJson(jsonDecode(userJson));
     }
     return null;
-  }*/
+  }
 
   static Future<void> removeUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -33,6 +33,8 @@ class Constants {
   static const String rememberPassword='password';
   static const String dateFormat='dateFormat';
   static const String fullName= 'Full name';
+  static const String firstName= 'First name';
+  static const String lastName= 'Last name';
   static const String confirmPassword= 'Confirm password';
   static const String alreadyHaveAcc= "Already have an account? ";
 

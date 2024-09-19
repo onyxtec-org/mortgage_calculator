@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mortgage_calculator/common/utils/shared_pref_helper.dart';
 import 'package:mortgage_calculator/common/widgets/text_view.dart';
+import 'package:mortgage_calculator/home_screen.dart';
+import 'package:mortgage_calculator/models/user_model.dart';
 
 import '../common/constants/constants.dart';
 import '../common/constants/icons_constant.dart';
@@ -23,11 +26,14 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   String? _errorMessage;
-  String? _nameError;
+  String? _firstNameError;
+  String? _lastNameError;
   String? _emailError;
   String? _passwordError;
   String? _confPasswordError;
-  final TextEditingController _nameController = TextEditingController();
+  String? password;
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   final TextEditingController _confPassController = TextEditingController();
@@ -77,17 +83,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                // name field
+                                // first name field
                                 TextInputFieldWidget(
-                                  controller: _nameController,
+                                  controller: _firstNameController,
                                   inputType: TextInputType.text,
-                                  hint: Constants.fullName,
+                                  hint: Constants.firstName,
                                   inputAction: TextInputAction.next,
-                                  errorText: _nameError,
+                                  prefixIcon: IconsConstant.icMessage,
+                                  errorText: _firstNameError,
                                   onChanged: (value) {
                                     setState(() {
                                       if (value.isNotEmpty) {
-                                        _nameError = null;
+                                        _firstNameError = null;
+                                      }
+                                    });
+                                  },
+                                ),
+
+                                // last name field
+                                TextInputFieldWidget(
+                                  controller: _lastNameController,
+                                  inputType: TextInputType.text,
+                                  hint: Constants.lastName,
+                                  inputAction: TextInputAction.next,
+                                  prefixIcon: IconsConstant.icMessage,
+                                  errorText: _lastNameError,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (value.isNotEmpty) {
+                                        _lastNameError = null;
                                       }
                                     });
                                   },
@@ -99,6 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   inputType: TextInputType.emailAddress,
                                   hint: Constants.emailHint,
                                   inputAction: TextInputAction.next,
+                                  prefixIcon: IconsConstant.icMessage,
                                   errorText: _emailError,
                                   onChanged: (value) {
                                     setState(() {
@@ -122,12 +147,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   errorText: _passwordError,
                                   onChanged: (value) {
                                     setState(() {
+                                      password = value;
                                       if (value.isEmpty) {
                                         _passwordError = 'Please enter you password';
-                                      } else if (!Utils.passwordRegex.hasMatch(value)) {
+                                      } else if (password!.length < 8) {
+                                        _passwordError = 'Password must at least 8 characters';
+                                      }
+                                      /*else if (!Utils.passwordRegex.hasMatch(value)) {
                                         _passwordError =
                                             'Please enter a password with at last 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.';
-                                      } else {
+                                      } */
+                                      else {
                                         _passwordError = null;
                                       }
                                     });
@@ -142,25 +172,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   inputAction: TextInputAction.done,
                                   errorText: _confPasswordError,
                                   onChanged: (value) {
-                                    if (value.isEmpty) {
-                                      _confPasswordError = 'Please enter you password';
-                                    } else if (!Utils.passwordRegex.hasMatch(value)) {
-                                      _confPasswordError = Constants.passError;
-                                    } else {
-                                      _confPasswordError = null;
-                                    }
+                                    setState(() {
+                                      if (value.isEmpty) {
+                                        _confPasswordError = 'Please enter confirm password';
+                                      } else if (password != _confPassController.text) {
+                                        _confPasswordError = 'Your confirm password doesn${"'"}t match password';
+                                      } else {
+                                        _confPasswordError = null;
+                                      }
+                                    });
                                   },
                                 ),
 
                                 const SizedBox(height: 20.0),
 
-                                //Sign In button
-                                Button(
-                                  onPressed: () {
-                                    _validateData();
-                                  },
-                                  text: Constants.signUp,
-                                  fontSize: 18,
+                                //Sign Up button
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Button(
+                                    onPressed: () {
+                                      _validateData();
+                                    },
+                                    text: Constants.signUp,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ],
                             ),
@@ -208,19 +243,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void _validateData() {
-    String name = _nameController.text.trim();
+  Future<void> _validateData() async {
+    String firstName = _firstNameController.text.trim();
+    String lastName = _lastNameController.text.trim();
     String email = _emailController.text.trim();
     String password = _passController.text.trim();
     String confPassword = _confPassController.text.trim();
 
-    String? nameError;
+    String? firstNameError;
+    String? lastNameError;
     String? emailError;
     String? passwordError;
     String? confPasswordError;
 
-    if (name.isEmpty) {
-      nameError = 'Please enter you name';
+    if (firstName.isEmpty) {
+      firstNameError = 'Please enter you first name';
+    }
+    if (lastName.isEmpty) {
+      lastNameError = 'Please enter you last name';
     }
     if (email.isEmpty) {
       emailError = 'Please enter you email';
@@ -229,9 +269,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     if (password.isEmpty) {
       passwordError = 'Please enter you password';
-    } else if (!Utils.passwordRegex.hasMatch(password)) {
-      passwordError = 'Please enter a valid password';
+    } else if (password.length < 8) {
+      passwordError = 'Password must at leas 8 characters';
     }
+    /*else if (!Utils.passwordRegex.hasMatch(password)) {
+      // passwordError = 'Please enter a valid password';
+    }*/
     if (confPassword.isEmpty) {
       confPasswordError = 'Please enter confirm password';
     } else if (password != confPassword) {
@@ -239,52 +282,61 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     setState(() {
-      _nameError = nameError;
+      _firstNameError = firstNameError;
+      _lastNameError = lastNameError;
       _emailError = emailError;
       _passwordError = passwordError;
       _confPasswordError = confPasswordError;
     });
-    if (nameError == null && emailError == null && passwordError == null && confPasswordError == null) {
+    if (firstNameError == null && lastNameError == null && emailError == null && passwordError == null && confPasswordError == null) {
       ProgressDialog.show(context, "Please wait...");
-      Future.delayed(const Duration(seconds: 2), () async {
-        Utils.showToast('Success');
-        ProgressDialog.hide(context);
-        try {
-          FormData body = FormData.fromMap({'name': name, 'email': email, 'password': password});
+      try {
+        FormData body = FormData.fromMap({
+          'first_name': firstName,
+          'last_name': lastName,
+          'email': email,
+          'password': password,
+        });
 
-          var response = await NetworkCallManager().apiCall(endPoint: ApiEndPoints.login, queryParameters: null, body: body, header: null);
-          if (response.statusCode == 201) {
-            Map<String, dynamic> responseData = response.data;
-            String message = responseData['message'];
-            Utils.showToast(message);
-            ProgressDialog.hide(context);
-            Future.delayed(const Duration(milliseconds: 200), () {
-              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInScreen()));
-            });
+        var response = await NetworkCallManager().apiCall(endPoint: ApiEndPoints.signup, queryParameters: null, body: body, header: null);
+        Map<String, dynamic> responseData = response;
+
+        String message = responseData['message'];
+        Utils.showToast(message);
+        ProgressDialog.hide(context);
+        Map<String, dynamic> userData = responseData['data']['user'];
+        UserModel userModel = UserModel.fromJson(userData);
+        String token = responseData['data']['token'];
+        SharedPrefHelper.saveStringValues(Constants.authToken, token);
+        SharedPrefHelper.saveUser(userModel);
+        Future.delayed(const Duration(milliseconds: 200), () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()), // Navigate to Home
+            (Route<dynamic> route) => false, // Remove all previous routes
+          );
+        });
+      } on DioException catch (e) {
+        if (e.response != null) {
+          // DioError with response
+          Map<String, dynamic> responseData = e.response!.data;
+
+          // Handle nested error for email
+          if (responseData.containsKey('email')) {
+            List<dynamic> emailErrors = responseData['email'];
+            Utils.showToast(emailErrors.join(', ')); // Display all email error messages
           } else {
-            Map<String, dynamic> responseData = response.data;
-            Utils.showToast(responseData['message']);
-            ProgressDialog.hide(context);
+            Utils.showToast('An error occurred');
           }
-        } on DioException catch (e) {
-          if (e.response != null) {
-            // DioError with response
-            print('DioError: ${e.response!.statusCode}');
-            print('Response data: ${e.response!.data}');
-            Map<String, dynamic> responseData = e.response!.data;
-            Utils.showToast('${responseData['message']}');
-          } else {
-            // DioError without response
-            print('DioError: ${e.message}');
-            Utils.showToast('${e.message}');
-          }
-          ProgressDialog.hide(context);
-        } catch (e) {
-          print('Error: $e');
-          Utils.showToast('Error: $e');
-          ProgressDialog.hide(context);
+        } else {
+          // DioError without response
+          Utils.showToast('${e.message}');
         }
-      });
+        ProgressDialog.hide(context);
+      } catch (e) {
+        Utils.showToast('Error: $e');
+        ProgressDialog.hide(context);
+      }
     }
   }
 }

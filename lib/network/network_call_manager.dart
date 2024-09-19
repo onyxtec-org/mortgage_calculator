@@ -5,7 +5,7 @@ import 'api_constants.dart';
 enum RequestType { GET, POST, UPDATE, PUT, PATCH, DELETE }
 
 enum ApiEndPoints {
-  login,
+  signup,
   logout,
   forgotPassword,
   deleteUser,
@@ -15,8 +15,8 @@ enum ApiEndPoints {
 extension ApiEndPointsValue on ApiEndPoints {
   String get url {
     switch (this) {
-      case ApiEndPoints.login:
-        return ApiConstants.login;
+      case ApiEndPoints.signup:
+        return ApiConstants.signup;
       case ApiEndPoints.deleteUser:
         return ApiConstants.deleteUser;
       case ApiEndPoints.logout:
@@ -30,8 +30,8 @@ extension ApiEndPointsValue on ApiEndPoints {
 
   RequestType get requestType {
     switch (this) {
-      case ApiEndPoints.login:
-        return RequestType.GET;
+      case ApiEndPoints.signup:
+        return RequestType.POST;
       case ApiEndPoints.deleteUser:
         return RequestType.POST;
       case ApiEndPoints.logout:

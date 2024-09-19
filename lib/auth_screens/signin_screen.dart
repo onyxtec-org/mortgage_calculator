@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mortgage_calculator/common/widgets/text_view.dart';
 import '../common/constants/constants.dart';
+import '../common/constants/icons_constant.dart';
 import '../common/constants/my_style.dart';
 import '../common/utils/shared_pref_helper.dart';
 import '../common/utils/utils.dart';
@@ -67,10 +68,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: Column(
                       children: [
                         TextView(
-                          text: 'SignIn',
+                          text: Constants.signIn,
                           fontSize: MediaQuery.of(context).size.width < 600 ? MyStyle.twentyFour : MyStyle.twentyEight,
                           fontColor: MyStyle.primaryColor,
-                          alignment: Alignment.centerLeft,
                           fontWeight: FontWeight.bold,
                         ),
                         const SizedBox(
@@ -83,6 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           inputType: TextInputType.emailAddress,
                           hint: Constants.emailHint,
                           inputAction: TextInputAction.next,
+                          prefixIcon: IconsConstant.icMessage,
                           errorText: _emailError,
                           onChanged: (value) {
                             setState(() {
@@ -150,12 +151,15 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
 
                         //Sign In button
-                        Button(
-                          onPressed: () {
-                            _validateData();
-                          },
-                          text: Constants.signIn,
-                          fontSize: 18,
+                        SizedBox(
+                          width: double.infinity,
+                          child: Button(
+                            onPressed: () {
+                              _validateData();
+                            },
+                            text: Constants.signIn,
+                            fontSize: 18,
+                          ),
                         ),
                       ],
                     ),
@@ -227,7 +231,7 @@ class _SignInScreenState extends State<SignInScreen> {
       ProgressDialog.show(context, "Please wait...");
       try {
         FormData body = FormData.fromMap({'email': email, 'password': password});
-        var response = await NetworkCallManager().apiCall(endPoint: ApiEndPoints.login, queryParameters: null, body: body, header: null);
+        var response = await NetworkCallManager().apiCall(endPoint: ApiEndPoints.signup, queryParameters: null, body: body, header: null);
 
         if (response.statusCode == 200) {
           Map<String, dynamic> responseData = response.data;
