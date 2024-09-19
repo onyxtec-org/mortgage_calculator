@@ -6,6 +6,7 @@ enum RequestType { GET, POST, UPDATE, PUT, PATCH, DELETE }
 
 enum ApiEndPoints {
   signup,
+  signin,
   logout,
   forgotPassword,
   deleteUser,
@@ -17,6 +18,8 @@ extension ApiEndPointsValue on ApiEndPoints {
     switch (this) {
       case ApiEndPoints.signup:
         return ApiConstants.signup;
+      case ApiEndPoints.signin:
+        return ApiConstants.signin;
       case ApiEndPoints.deleteUser:
         return ApiConstants.deleteUser;
       case ApiEndPoints.logout:
@@ -31,6 +34,8 @@ extension ApiEndPointsValue on ApiEndPoints {
   RequestType get requestType {
     switch (this) {
       case ApiEndPoints.signup:
+        return RequestType.POST;
+        case ApiEndPoints.signin:
         return RequestType.POST;
       case ApiEndPoints.deleteUser:
         return RequestType.POST;

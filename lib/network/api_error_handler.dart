@@ -21,13 +21,15 @@ class ApiErrorHandler {
       // DioError with response
       print('DioError: ${error.response!.statusCode}');
       print('Response data: ${error.response!.data}');
+      // DioError with response
       Map<String, dynamic> responseData = error.response!.data;
-      Utils.showToast('${responseData['message']}');
-      if (responseData['message'] == "Your account has been blocked. For further details, please contact the admin") {
-        goToLogInPage(context);
-      }
-      if (responseData['message'] == 'Unauthenticated.') {
-        goToLogInPage(context);
+
+      // Handle nested error for email
+      if (responseData.containsKey('email')) {
+        List<dynamic> emailErrors = responseData['email'];
+        Utils.showToast(emailErrors.join(', ')); // Display all email error messages
+      } else {
+        Utils.showToast('An error occurred');
       }
     } else {
       // DioError without response

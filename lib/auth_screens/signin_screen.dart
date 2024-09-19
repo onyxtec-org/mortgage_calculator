@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mortgage_calculator/common/widgets/text_view.dart';
+import 'package:mortgage_calculator/home_screen.dart';
 import '../common/constants/constants.dart';
 import '../common/constants/icons_constant.dart';
 import '../common/constants/my_style.dart';
@@ -12,6 +13,7 @@ import '../common/widgets/password_text_field.dart';
 import '../common/widgets/progress_dialog.dart';
 import '../common/widgets/switch_button.dart';
 import '../common/widgets/text_input_field_widget.dart';
+import '../models/user_model.dart';
 import '../network/api_error_handler.dart';
 import '../network/network_call_manager.dart';
 import 'forgot_password_screen.dart';
@@ -109,9 +111,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             setState(() {
                               if (value.isEmpty) {
                                 _passwordError = 'Please enter your password';
-                              } else if (!Utils.passwordRegex.hasMatch(value)) {
+                              }/* else if (!Utils.passwordRegex.hasMatch(value)) {
                                 _passwordError = Constants.passError;
-                              } else {
+                              }*/ else {
                                 _passwordError = null;
                               }
                             });
@@ -217,9 +219,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
     if (password.isEmpty) {
       passwordError = 'Please enter your password';
-    } else if (!Utils.passwordRegex.hasMatch(password)) {
-      passwordError = 'Please enter a valid password';
     }
+    /* else if (!Utils.passwordRegex.hasMatch(password)) {
+      passwordError = 'Please enter a valid password';
+    }*/
 
     setState(() {
       _emailError = emailError;
@@ -231,29 +234,30 @@ class _SignInScreenState extends State<SignInScreen> {
       ProgressDialog.show(context, "Please wait...");
       try {
         FormData body = FormData.fromMap({'email': email, 'password': password});
-        var response = await NetworkCallManager().apiCall(endPoint: ApiEndPoints.signup, queryParameters: null, body: body, header: null);
+        var response = await NetworkCallManager().apiCall(endPoint: ApiEndPoints.signin, queryParameters: null, body: body, header: null);
+        ProgressDialog.hide(context);
 
-        if (response.statusCode == 200) {
-          Map<String, dynamic> responseData = response.data;
-          String bearerToken = responseData['bearer_token'];
-          Map<String, dynamic> user = responseData['user'];
-          // UserModel userModel = UserModel.fromJson(user);
-          // UserSingleton().setUser(userModel);
-          // SharedPrefHelper.saveUser(userModel);
+        Map<String, dynamic> responseData = response;
+        String message = responseData['message'];
+        Utils.showToast(message);
 
-          if (!isNotRemembered) {
-            SharedPrefHelper.saveBooleanValues(Constants.isNotRemember, false);
-            SharedPrefHelper.saveStringValues(Constants.rememberEmail, email);
-            SharedPrefHelper.saveStringValues(Constants.rememberPassword, password);
-          } else {
-            SharedPrefHelper.saveBooleanValues(Constants.isNotRemember, true);
-            SharedPrefHelper.saveStringValues(Constants.rememberEmail, null);
-            SharedPrefHelper.saveStringValues(Constants.rememberPassword, null);
-          }
-          // Save bearer token to shared preferences
-          SharedPrefHelper.saveStringValues(Constants.authToken, bearerToken);
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => const MainController()));
+        String bearerToken = responseData['data']['token'];
+        Map<String, dynamic> user = responseData['data']['user'];
+        UserModel userModel = UserModel.fromJson(user);
+        SharedPrefHelper.saveUser(userModel);
+
+        if (!isNotRemembered) {
+          SharedPrefHelper.saveBooleanValues(Constants.isNotRemember, false);
+          SharedPrefHelper.saveStringValues(Constants.rememberEmail, email);
+          SharedPrefHelper.saveStringValues(Constants.rememberPassword, password);
+        } else {
+          SharedPrefHelper.saveBooleanValues(Constants.isNotRemember, true);
+          SharedPrefHelper.saveStringValues(Constants.rememberEmail, null);
+          SharedPrefHelper.saveStringValues(Constants.rememberPassword, null);
         }
+        // Save bearer token to shared preferences
+        SharedPrefHelper.saveStringValues(Constants.authToken, bearerToken);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
       } on DioException catch (e) {
         ProgressDialog.hide(context);
         print('DioError: ${e.response!.statusCode}');
