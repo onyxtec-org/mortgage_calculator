@@ -67,11 +67,6 @@ class MortgageLoanManager {
     return (percentage / 100) * homePrice;
   }
 
-  static String formatCurrency(double amount) {
-    String currencyNumber = NumberFormat.currency(locale: 'en_US', symbol: '\$').format(amount);
-    return currencyNumber;
-  }
-
   // Calculate the total monthly payment including mortgage, taxes, insurance, and fees
   static Result calculateTotalMonthlyPayment({
     required double homePrice,

@@ -22,4 +22,9 @@ class Utils{
     return DateTime.now().toUtc().millisecondsSinceEpoch;
   }
 
+  static String formatCurrency(double amount) {
+    String currencyNumber = NumberFormat.currency(locale: 'en_US', symbol: '\$').format(amount);
+    return currencyNumber;
+  }
+
 }

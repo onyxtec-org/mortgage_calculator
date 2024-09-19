@@ -183,7 +183,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                   ),
                                                   const SizedBox(height: MyStyle.fourteen),
                                                   TextView(
-                                                    text: '\$${mortgageData.homePrice}',
+                                                    text: Utils.formatCurrency(mortgageData.homePrice),
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                   const TextView(

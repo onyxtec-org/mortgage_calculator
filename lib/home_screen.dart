@@ -252,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   const SizedBox(height: MyStyle.fourteen),
                                                   TextView(
-                                                    text: '\$${mortgageData.homePrice}',
+                                                    text: Utils.formatCurrency(mortgageData.homePrice),
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                   const TextView(
