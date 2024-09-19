@@ -215,7 +215,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       fontColor: MyStyle.grayColor,
                                                       fontSize: MyStyle.twelve,
                                                       textAlign: TextAlign.start,
-                                                      alignment: Alignment.center,
                                                     ),
                                                     const SizedBox(height: MyStyle.fourteen),
                                                     TextView(

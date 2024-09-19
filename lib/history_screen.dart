@@ -148,7 +148,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                       fontColor: MyStyle.grayColor,
                                                       fontSize: MyStyle.twelve,
                                                       textAlign: TextAlign.start,
-                                                      alignment: Alignment.center,
                                                     ),
                                                     const SizedBox(height: MyStyle.fourteen),
                                                     TextView(
