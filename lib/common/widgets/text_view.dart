@@ -11,6 +11,8 @@ class TextView extends StatelessWidget {
   final Color fontColor;
   final FontWeight fontWeight;
   final int? maxLines;
+  final bool underline;
+
 
   const TextView({
     super.key,
@@ -21,6 +23,7 @@ class TextView extends StatelessWidget {
     this.fontColor = MyStyle.primaryColor,
     this.fontWeight = FontWeight.normal,
     this.maxLines,
+    this.underline = false,
   });
 
   @override
@@ -37,7 +40,9 @@ class TextView extends StatelessWidget {
           color: fontColor,
           fontFamily: Constants.fontFamily,
           fontWeight: fontWeight,
+          decoration: underline ? TextDecoration.underline : null,
         ),
+
       ),
     );
   }

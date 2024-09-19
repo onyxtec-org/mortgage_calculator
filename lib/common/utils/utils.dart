@@ -1,6 +1,11 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
-class Utils{
+import '../constants/my_style.dart';
+
+class Utils {
+  static RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+  static RegExp passwordRegex = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
 
   static String formatTimestampToTime(int timestamp) {
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
@@ -18,4 +23,15 @@ class Utils{
     return DateTime.now().toUtc().millisecondsSinceEpoch;
   }
 
+  static void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: MyStyle.grayColor,
+      textColor: MyStyle.whiteColor,
+      fontSize: MyStyle.sixteen,
+    );
+  }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mortgage_calculator/auth_screens/sign_up_screen.dart';
+import 'package:mortgage_calculator/auth_screens/signin_screen.dart';
 import 'package:mortgage_calculator/common/constants/icons_constant.dart';
+import 'package:mortgage_calculator/common/utils/shared_pref_helper.dart';
 import 'package:mortgage_calculator/home_screen.dart';
 import 'package:mortgage_calculator/onboarding_screen.dart';
 import 'common/constants/constants.dart';
@@ -75,17 +78,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkStatus() async {
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const OnBoardingScreen()));
+    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const OnBoardingScreen()));
 
-   /* Utils.requestStoragePermission(context, (isPermissionGranted) async {
-      if (!_isDisposed) {
-        String? bearerToken = await SharedPref.retrieveStringValues(Constants.authToken);
-        if (bearerToken == null) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AuthScreen()));
-          return;
-        }
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainController()));
+    if (!_isDisposed) {
+      String? bearerToken = await SharedPrefHelper.retrieveStringValues(Constants.authToken);
+      if (bearerToken == null) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+        return;
       }
-    });*/
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+    }
   }
 }

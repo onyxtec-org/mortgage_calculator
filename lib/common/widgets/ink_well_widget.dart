@@ -15,8 +15,11 @@ class InkWellWidget extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(8.0),
       onTap: onTap,
-      child: Ink(
-        child: child,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Ink(
+          child: child,
+        ),
       ),
     );
   }
