@@ -8,8 +8,12 @@ class Utils{
     return formattedDate;
   }
 
-  static String formatDate(int timestamp) {
+  static String formatTimeStampToDate(int timestamp) {
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    var formattedDate = DateFormat('MM-dd-yyyy').format(date);
+    return formattedDate;
+  } 
+  static String formatDate(DateTime date) {
     var formattedDate = DateFormat('MM-dd-yyyy').format(date);
     return formattedDate;
   }

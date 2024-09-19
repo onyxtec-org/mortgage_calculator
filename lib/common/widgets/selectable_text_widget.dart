@@ -8,12 +8,12 @@ class SelectableTextWidget extends StatelessWidget {
   final bool isLeftRadius;
 
   const SelectableTextWidget({
-    Key? key,
+    super.key,
     required this.text,
     required this.selectedColor,
     required this.onTap,
     required this.isLeftRadius,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +23,11 @@ class SelectableTextWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: selectedColor, // Toggle color based on selection
           borderRadius: isLeftRadius
-              ? BorderRadius.only(
+              ? const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   bottomLeft: Radius.circular(10),
                 )
-              : BorderRadius.only(
+              : const BorderRadius.only(
                   topRight: Radius.circular(10),
                   bottomRight: Radius.circular(10),
                 ), // Custom border radius

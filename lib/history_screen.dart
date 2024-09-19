@@ -144,7 +144,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                       maxLines: 1,
                                                     ),
                                                     TextView(
-                                                      text: Utils.formatDate(mortgageData.createdAt!),
+                                                      text: Utils.formatTimeStampToDate(mortgageData.createdAt!),
                                                       fontColor: MyStyle.grayColor,
                                                       fontSize: MyStyle.twelve,
                                                       textAlign: TextAlign.start,

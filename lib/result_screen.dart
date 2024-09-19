@@ -57,7 +57,7 @@ class _ResultScreenState extends State<ResultScreen> {
           annualInterestRate: mortgageData!.interestRate,
           annualPropertyTax: mortgageData!.propertyTax,
           annualHomeInsurance: mortgageData!.annualHomeOwnerInsurance,
-          pmiAmount: mortgageData!.pmi,
+          annualPMIAmount: mortgageData!.pmi,
           hoaFees: mortgageData!.hoaFees);
       dataMap = {
         'Principle & interest': totalMonthlyPayment.principleAndInterest,
@@ -304,7 +304,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                     ),
                                     children: <TextSpan>[
                                       TextSpan(
-                                        text: '\$${totalMonthlyPayment.totalMonthlyPayment.toStringAsFixed(2)}',
+                                        text: MortgageLoanManager.formatCurrency(totalMonthlyPayment.totalMonthlyPayment),//'\$${totalMonthlyPayment.totalMonthlyPayment.toStringAsFixed(2)}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: MyStyle.sixteen,
