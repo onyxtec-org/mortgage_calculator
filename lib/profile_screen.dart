@@ -64,9 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Map<String, dynamic> responseData = response;
       UserModel updatedUserData = responseData['data'];
       userData = updatedUserData;
-      setState(() {
-
-      });
+      setState(() {});
     } on DioException catch (error) {
       ProgressDialog.hide(context);
       ApiErrorHandler.handleError(context, error);
@@ -90,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
                 onIconTap: (index) async {
                   String? locale = await SharedPrefHelper.retrieveStringValues('locale');
-        /*
+                  /*
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -117,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             padding: const EdgeInsets.all(10.0),
                             child: Column(
                               children: [
-        /*                              Align(
+                                /*                              Align(
                                   alignment: Alignment.centerRight,
                                   child: IntrinsicWidth(
                                     child: InkWellWidget(
@@ -142,13 +140,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ),
                                 )*/
-                                const AccountDetailsWidget(
+                                AccountDetailsWidget(
                                   title: 'Name',
-                                  value: 'Tariq usman',
+                                  value: '${userData?.firstName} ${userData?.lastName}',
                                 ),
-                                const AccountDetailsWidget(
+                                AccountDetailsWidget(
                                   title: 'Email',
-                                  value: 'tu@onyxtec.co',
+                                  value: userData?.email ?? '',
                                 ),
                                 const AccountDetailsWidget(
                                   title: 'Account status',
