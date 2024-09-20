@@ -19,9 +19,6 @@ class ApiErrorHandler {
   static Future<void> handleDioError(BuildContext context, DioException error) async {
     if (error.response != null) {
       // DioError with response
-      print('DioError: ${error.response!.statusCode}');
-      print('Response data: ${error.response!.data}');
-      // DioError with response
       Map<String, dynamic> responseData = error.response!.data;
 
       // Handle nested error for email
@@ -36,7 +33,6 @@ class ApiErrorHandler {
       }
     } else {
       // DioError without response
-      print('DioError: ${error.message}');
       Utils.showToast('${error.message}');
     }
   }

@@ -36,170 +36,209 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? userImage;
   CroppedFile? portraitImage;
   DateTime _currentDate = DateTime.now();
+  UserModel? userData;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    userData = await SharedPrefHelper.getUser();
+    if (userData == null) {
+      _fetchUserData();
+    }
+  }
+
+  Future<void> _fetchUserData() async {
+    ProgressDialog.show(context, 'Please wait ...');
+    String? bearerToken = await SharedPrefHelper.retrieveStringValues(Constants.authToken);
+    var header = NetworkCallManager().header;
+    header['Authorization'] = 'Bearer $bearerToken';
+
+    try {
+      var response = await NetworkCallManager().apiCall(endPoint: ApiEndPoints.logout, header: header);
+      ProgressDialog.hide(context);
+      Map<String, dynamic> responseData = response;
+      UserModel updatedUserData = responseData['data'];
+      userData = updatedUserData;
+      setState(() {
+
+      });
+    } on DioException catch (error) {
+      ProgressDialog.hide(context);
+      ApiErrorHandler.handleError(context, error);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AppProvider>(context);
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            NavBar(
-              backIcon: IconsConstant.icBackArrow,
-              titleText: 'Profile',
-              icons: const [
-                IconsConstant.icSettings,
-              ],
-              onIconTap: (index) async {
-                String? locale = await SharedPrefHelper.retrieveStringValues('locale');
-/*
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SettingsScreen(
-                              locale: locale,
-                            )));*/
-              },
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 40.0),
-                      Card(
-                        elevation: 10,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: [
-/*                              Align(
-                                alignment: Alignment.centerRight,
-                                child: IntrinsicWidth(
-                                  child: InkWellWidget(
-                                    onTap: () {
-                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfileScreen()));
-                                    },
-                                    child: BackgroundContainer(
-                                        color: MyStyle.primaryColor,
-                                        borderRadius: 6,
-                                        isBorder: false,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            children: [
-                                              SvgPicture.asset(
-                                                IconsConstant.icEditProfile,
-                                                color: MyStyle.whiteColor,
-                                              ),
-                                            ],
-                                          ),
-                                        )),
+      body: RefreshIndicator(
+        onRefresh: _fetchUserData,
+        child: SafeArea(
+          child: Column(
+            children: [
+              NavBar(
+                backIcon: IconsConstant.icBackArrow,
+                titleText: 'Profile',
+                icons: const [
+                  IconsConstant.icSettings,
+                ],
+                onIconTap: (index) async {
+                  String? locale = await SharedPrefHelper.retrieveStringValues('locale');
+        /*
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SettingsScreen(
+                                locale: locale,
+                              )));*/
+                },
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 40.0),
+                        Card(
+                          elevation: 10,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
+                          ),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              children: [
+        /*                              Align(
+                                  alignment: Alignment.centerRight,
+                                  child: IntrinsicWidth(
+                                    child: InkWellWidget(
+                                      onTap: () {
+                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfileScreen()));
+                                      },
+                                      child: BackgroundContainer(
+                                          color: MyStyle.primaryColor,
+                                          borderRadius: 6,
+                                          isBorder: false,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  IconsConstant.icEditProfile,
+                                                  color: MyStyle.whiteColor,
+                                                ),
+                                              ],
+                                            ),
+                                          )),
+                                    ),
                                   ),
+                                )*/
+                                const AccountDetailsWidget(
+                                  title: 'Name',
+                                  value: 'Tariq usman',
                                 ),
-                              )*/
-                              const AccountDetailsWidget(
-                                title: 'Name',
-                                value: 'Tariq usman',
-                              ),
-                              const AccountDetailsWidget(
-                                title: 'Email',
-                                value: 'tu@onyxtec.co',
-                              ),
-                              const AccountDetailsWidget(
-                                title: 'Account status',
-                                value: 'active',
-                              ),
-                            ],
+                                const AccountDetailsWidget(
+                                  title: 'Email',
+                                  value: 'tu@onyxtec.co',
+                                ),
+                                const AccountDetailsWidget(
+                                  title: 'Account status',
+                                  value: 'active',
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      InkWellWidget(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => ChangePasswordScreen()));
-                        },
-                        child: const BackgroundContainer(
-                            color: MyStyle.primaryColor,
-                            borderRadius: 6,
-                            isBorder: false,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Update Password',
-                                    style: TextStyle(color: MyStyle.whiteColor, fontSize: MyStyle.fourteen),
-                                  ),
-                                ],
-                              ),
-                            )),
-                      ),
-                      InkWellWidget(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialogWidget(
-                                  titleText: 'Warning!',
-                                  content: 'Are you sure you want to Logout?',
-                                  pressedNo: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  pressedYes: () {
-                                    logout(context, (callback) {
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        InkWellWidget(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => ChangePasswordScreen()));
+                          },
+                          child: const BackgroundContainer(
+                              color: MyStyle.primaryColor,
+                              borderRadius: 6,
+                              isBorder: false,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Update Password',
+                                      style: TextStyle(color: MyStyle.whiteColor, fontSize: MyStyle.fourteen),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ),
+                        InkWellWidget(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialogWidget(
+                                    titleText: 'Warning!',
+                                    content: 'Are you sure you want to Logout?',
+                                    pressedNo: () {
                                       Navigator.of(context).pop();
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(builder: (_) => SignInScreen()),
-                                        (Route<dynamic> route) => false,
-                                      );
-                                    });
-                                  },
-                                );
-                              });
-                        },
-                        child: BackgroundContainer(
-                            color: MyStyle.primaryColor,
-                            borderRadius: 6,
-                            isBorder: false,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    IconsConstant.icLogout,
-                                    color: MyStyle.whiteColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  const Text(
-                                    'Logout',
-                                    style: TextStyle(color: MyStyle.whiteColor, fontSize: MyStyle.fourteen),
-                                  ),
-                                ],
-                              ),
-                            )),
-                      ),
-                    ],
+                                    },
+                                    pressedYes: () {
+                                      logout(context, (callback) {
+                                        Navigator.of(context).pop();
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(builder: (_) => SignInScreen()),
+                                          (Route<dynamic> route) => false,
+                                        );
+                                      });
+                                    },
+                                  );
+                                });
+                          },
+                          child: BackgroundContainer(
+                              color: MyStyle.primaryColor,
+                              borderRadius: 6,
+                              isBorder: false,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                      IconsConstant.icLogout,
+                                      color: MyStyle.whiteColor,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    const Text(
+                                      'Logout',
+                                      style: TextStyle(color: MyStyle.whiteColor, fontSize: MyStyle.fourteen),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

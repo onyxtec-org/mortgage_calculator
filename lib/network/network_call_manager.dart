@@ -11,6 +11,7 @@ enum ApiEndPoints {
   forgotPassword,
   deleteUser,
   changePassword,
+  profile
 }
 
 extension ApiEndPointsValue on ApiEndPoints {
@@ -28,6 +29,8 @@ extension ApiEndPointsValue on ApiEndPoints {
         return ApiConstants.forgotPassword;
       case ApiEndPoints.changePassword:
         return ApiConstants.changePassword;
+        case ApiEndPoints.profile:
+        return ApiConstants.profile;
     }
   }
 
@@ -45,6 +48,8 @@ extension ApiEndPointsValue on ApiEndPoints {
         return RequestType.POST;
       case ApiEndPoints.changePassword:
         return RequestType.POST;
+        case ApiEndPoints.profile:
+        return RequestType.GET;
     }
   }
 }
