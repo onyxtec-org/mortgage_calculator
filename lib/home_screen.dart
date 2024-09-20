@@ -14,6 +14,7 @@ import 'package:mortgage_calculator/common/widgets/svg_icon_widget.dart';
 import 'package:mortgage_calculator/common/widgets/text_view.dart';
 import 'package:mortgage_calculator/history_screen.dart';
 import 'package:mortgage_calculator/local_db/mortgage_db_manager.dart';
+import 'package:mortgage_calculator/profile_screen.dart';
 import 'package:mortgage_calculator/result_screen.dart';
 import 'package:provider/provider.dart';
 import 'app_provider.dart';
@@ -64,10 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
               NavBar(
                 titleText: "Mortgage Cal",
                 titleColor: MyStyle.whiteColor,
-                icons: [IconsConstant.icLogout],
+                icons: [IconsConstant.icProfile],
                 iconsColor: MyStyle.whiteColor,
                 onIconTap: (index) {
-                  logout();
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen()));
                 },
               ),
               const SizedBox(height: MyStyle.twenty),
@@ -302,31 +303,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (appProvider != null && appProvider!.isUpdate) {
       print('Called');
       fetchMortgageHistory();
-    }
-  }
-
-  Future<void> logout() async {
-    String? bearerToken = await SharedPrefHelper.retrieveStringValues(Constants.authToken);
-    final String? fcmToken = await SharedPrefHelper.retrieveStringValues(Constants.fcmToken);
-
-    var header = NetworkCallManager().header;
-    header['Authorization'] = 'Bearer $bearerToken';
-
-    Map<String, dynamic> body = {
-      'tokenToDelete': fcmToken,
-    };
-
-    try {
-      var response = await NetworkCallManager().apiCall(endPoint: ApiEndPoints.logout, queryParameters: null, body: null, header: header);
-      Map<String, dynamic> data = response;
-      Utils.showToast('${data['message']}');
-      SharedPrefHelper.saveStringValues(Constants.authToken, null);
-      SharedPrefHelper.saveStringValues(Constants.fcmToken, null);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => SignInScreen()));
-      // provider?.changeTabBarIndex(index: 0);
-      // provider?.logout();
-    } on DioException catch (e) {
-      ApiErrorHandler.handleError(context, e);
     }
   }
 }

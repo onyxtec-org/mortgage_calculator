@@ -124,8 +124,9 @@ class _SignInScreenState extends State<SignInScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 30.0, top: 10.0),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              StyledSwitch(onToggled: (value) {}),
+                              /*StyledSwitch(onToggled: (value) {}),
                               const SizedBox(
                                 width: 10.0,
                               ),
@@ -136,7 +137,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   fontSize: MediaQuery.of(context).size.width < 600 ? MyStyle.fourteen : MyStyle.eighteen,
                                   textAlign: TextAlign.start,
                                 ),
-                              ),
+                              ),*/
                               //forgot password
                               InkWellWidget(
                                 onTap: () {
@@ -145,6 +146,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 child: TextView(
                                   text: Constants.forgotPass,
                                   fontColor: MyStyle.darkGrayColor,
+                                  underline: true,
                                   fontSize: MediaQuery.of(context).size.width < 600 ? MyStyle.fourteen : MyStyle.eighteen,
                                 ),
                               ),

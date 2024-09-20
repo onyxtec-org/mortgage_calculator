@@ -9,7 +9,6 @@ import 'common/constants/constants.dart';
 import 'common/constants/my_style.dart';
 
 class SplashScreen extends StatefulWidget {
-
   SplashScreen({
     super.key,
   });
@@ -78,15 +77,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkStatus() async {
     await Future.delayed(const Duration(seconds: 2));
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const OnBoardingScreen()));
 
     if (!_isDisposed) {
       String? bearerToken = await SharedPrefHelper.retrieveStringValues(Constants.authToken);
-      if (bearerToken == null) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInScreen()));
-        return;
+      if (bearerToken != null) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      } else {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
       }
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
     }
   }
 }

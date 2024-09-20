@@ -10,7 +10,7 @@ enum ApiEndPoints {
   logout,
   forgotPassword,
   deleteUser,
-  passwordReset,
+  changePassword,
 }
 
 extension ApiEndPointsValue on ApiEndPoints {
@@ -26,8 +26,8 @@ extension ApiEndPointsValue on ApiEndPoints {
         return ApiConstants.logout;
       case ApiEndPoints.forgotPassword:
         return ApiConstants.forgotPassword;
-      case ApiEndPoints.passwordReset:
-        return ApiConstants.passwordReset;
+      case ApiEndPoints.changePassword:
+        return ApiConstants.changePassword;
     }
   }
 
@@ -43,7 +43,7 @@ extension ApiEndPointsValue on ApiEndPoints {
         return RequestType.POST;
       case ApiEndPoints.forgotPassword:
         return RequestType.POST;
-      case ApiEndPoints.passwordReset:
+      case ApiEndPoints.changePassword:
         return RequestType.POST;
     }
   }

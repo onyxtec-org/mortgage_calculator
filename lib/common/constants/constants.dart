@@ -20,6 +20,8 @@ class Constants {
   static const String loanInformation = 'Loan Information';
   static const String emailHint= 'abc@email.com';
   static const String password= 'Your password';
+  static const String currentPassword= 'Current password';
+  static const String newPassword= 'New password';
   static const String passError = 'Please enter a password with at last 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.';
   static const String forgotPass= "Forgot Password?";
   static const String signIn = "Sign in";

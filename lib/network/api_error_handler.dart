@@ -28,6 +28,9 @@ class ApiErrorHandler {
       if (responseData.containsKey('email')) {
         List<dynamic> emailErrors = responseData['email'];
         Utils.showToast(emailErrors.join(', ')); // Display all email error messages
+      } else if (responseData.containsKey('message')) {
+        String message = responseData['message'];
+        Utils.showToast(message);
       } else {
         Utils.showToast('An error occurred');
       }
